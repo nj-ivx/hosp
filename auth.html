@@ -113,6 +113,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
+<!-- Chatbase floating widget -->
+<script>
+  window.chatbaseConfig = { chatbotId: "Ie42z57d6pT_nwLvZF5c7" };
+</script>
+<script src="https://www.chatbase.co/embed.min.js" id="Ie42z57d6pT_nwLvZF5c7" defer></script>
 <script>
   // ---- Theme persistence ----
   const root = document.documentElement;
@@ -202,19 +207,9 @@
       });
       if (error) throw error;
 
-      const userId = data.user ? data.user.id : (data.session ? data.session.user.id : null);
-      if (userId) {
-        const { error: roleError } = await window.supabaseClient
-          .from("user_roles")
-          .insert([{ user_id: userId, role: "user" }]);
-        if (roleError) {
-          // Account exists but role row failed — surface it rather than
-          // silently leaving the user without an entry in user_roles.
-          console.error("[auth] role insert failed:", roleError.message);
-          showAlert("Account created, but we couldn't finish setting up your access. Contact an administrator.", "warning");
-          return;
-        }
-      }
+      // Note: the user_roles row is now created server-side by a Postgres
+      // trigger (handle_new_user on auth.users) so it works regardless of
+      // whether email confirmation delays the client-side session.
 
       if (data.session) {
         window.location.href = "index.html";
