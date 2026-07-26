@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · Feras Company Medical Portal</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  #app { display: none; }
+  .loading-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--ink-muted);
+    font-size: 14px;
+  }
+  .hero {
+    padding: 40px 0 28px;
+  }
+  .hero h1 { font-size: 26px; margin-bottom: 6px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+  @media (max-width: 800px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { padding: 20px; }
+  .stat-card .value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--primary); }
+  .stat-card .label { font-size: 12.5px; color: var(--ink-muted); margin-top: 4px; }
+  .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 800px) { .action-grid { grid-template-columns: 1fr; } }
+  .action-card {
+    padding: 22px;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .action-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .action-card .icon { font-size: 22px; margin-bottom: 10px; display: block; }
+  .action-card h3 { font-size: 15.5px; margin-bottom: 4px; }
+  .action-card p { font-size: 13px; color: var(--ink-muted); margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  th { color: var(--ink-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
+  section.panel { margin-bottom: 32px; }
+  .panel-head { margin-bottom: 14px; }
+  .panel-head h2 { font-size: 17px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div id="loading" class="loading-screen">
+    <div class="spinner"></div>
+    <span>Verifying your session…</span>
+  </div>
+
+  <div id="app">
+    <nav class="navbar">
+      <div class="container">
+        <div class="brand"><span class="mark">✚</span> Feras Company Medical Portal</div>
+        <div class="nav-actions">
+          <span id="roleBadge" class="badge badge-user">Patient</span>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
+          <button class="btn btn-ghost" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+    </nav>
+
+    <svg class="vital-line" viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 14 H140 L155 4 L170 24 L185 14 H400"/>
+    </svg>
+
+    <main class="container">
+      <div id="dashboardAlert" class="alert alert-error" hidden role="alert"></div>
+
+      <div class="hero">
+        <h1 id="greeting">Welcome back</h1>
+        <p class="muted" id="subGreeting">Here's what's happening today.</p>
+      </div>
+
+      <!-- ==== ADMIN VIEW ==== -->
+      <div id="adminView" class="hidden">
+        <div class="stat-grid">
+          <div class="card stat-card"><div class="value" id="statTotal">–</div><div class="label">Total patients</div></div>
+          <div class="card stat-card"><div class="value" id="statWeek">–</div><div class="label">New this week</div></div>
+          <div class="card stat-card"><div class="value" id="statAllergy">–</div><div class="label">With allergies on file</div></div>
+          <div class="card stat-card"><div class="value" id="statInsured">–</div><div class="label">With insurance on file</div></div>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Database access</h2></div>
+          <div class="action-grid">
+            <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
+              <span class="icon">📝</span>
+              <h3>New intake form</h3>
+              <p>Register a patient manually</p>
+            </a>
+            <a class="card action-card" id="openSupabaseLink" href="#" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
+              <span class="icon">🗄️</span>
+              <h3>Supabase table editor</h3>
+              <p>Direct database access</p>
+            </a>
+            <div class="card action-card" id="exportBtn">
+              <span class="icon">⬇️</span>
+              <h3>Export records</h3>
+              <p>Download patients as CSV</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Recent patients</h2></div>
+          <div class="card" style="padding: 8px 0; overflow-x:auto;">
+            <table id="patientTable">
+              <thead>
+                <tr><th>Name</th><th>DOB</th><th>Blood type</th><th>Insurance</th><th>Registered</th></tr>
+              </thead>
+              <tbody id="patientTableBody"></tbody>
+            </table>
+            <div id="patientEmpty" class="empty-state hidden">No patient records yet.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ==== PATIENT VIEW ==== -->
+      <div id="userView" class="hidden">
+        <div class="action-grid">
+          <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
+            <span class="icon">📝</span>
+            <h3>Start registration</h3>
+            <p>Submit your health record intake form</p>
+          </a>
+          <div class="card action-card">
+            <span class="icon">📋</span>
+            <h3>My submissions</h3>
+            <p id="mySubmissionsStatus" class="muted">Checking your records…</p>
+          </div>
+          <div class="card action-card">
+            <span class="icon">💬</span>
+            <h3>Need help?</h3>
+            <p>Use the chat assistant in the bottom corner</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<!-- Chatbase floating widget -->
+<script>
+  window.chatbaseConfig = { chatbotId: "YOUR-CHATBASE-BOT-ID" };
+</script>
+<script src="https://www.chatbase.co/embed.min.js" id="YOUR-CHATBASE-BOT-ID" defer></script>
+<script>
+  const root = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
+  function applyTheme(t) { root.setAttribute("data-theme", t); localStorage.setItem("theme", t); }
+  applyTheme(localStorage.getItem("theme") || "light");
+  themeToggle.addEventListener("click", () => {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+
+  const loadingEl = document.getElementById("loading");
+  const appEl = document.getElementById("app");
+  const dashboardAlert = document.getElementById("dashboardAlert");
+  function showDashboardAlert(msg) {
+    dashboardAlert.textContent = msg;
+    dashboardAlert.hidden = false;
+  }
+  function revealApp() {
+    loadingEl.style.display = "none";
+    appEl.style.display = "block";
+  }
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    if (window.supabaseClient) await window.supabaseClient.auth.signOut();
+    window.location.href = "auth.html";
+  });
+
+  (async function init() {
+    if (!window.supabaseClient) {
+      showDashboardAlert("Can't reach the database service right now. Please refresh the page.");
+      revealApp();
+      return;
+    }
+
+    const session = await window.requireSession("auth.html");
+    if (!session) return; // requireSession already redirects
+
+    const email = session.user.email || "";
+    document.getElementById("greeting").textContent =
+      `Welcome back${email ? ", " + email.split("@")[0] : ""}`;
+
+    let role;
+    try {
+      role = await window.getUserRole();
+    } catch (err) {
+      showDashboardAlert("Couldn't verify your account permissions. Please try refreshing.");
+      revealApp();
+      return;
+    }
+
+    if (role === "admin") {
+      document.getElementById("roleBadge").textContent = "Administrator";
+      document.getElementById("roleBadge").className = "badge badge-admin";
+      document.getElementById("subGreeting").textContent = "System overview and patient records.";
+      document.getElementById("adminView").classList.remove("hidden");
+      await loadAdminData();
+    } else if (role === "user") {
+      document.getElementById("roleBadge").textContent = "Patient";
+      document.getElementById("subGreeting").textContent = "Manage your health record submissions.";
+      document.getElementById("userView").classList.remove("hidden");
+      await loadUserData(session.user.id, session.user.email);
+    } else {
+      showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
+    }
+
+    revealApp();
+  })();
+
+  async function loadAdminData() {
+    try {
+      const { data, error, count } = await window.supabaseClient
+        .from("patients")
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+
+      const total = count ?? data.length;
+      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      const newThisWeek = data.filter(p => new Date(p.created_at).getTime() >= oneWeekAgo).length;
+      const withAllergies = data.filter(p => p.allergies && p.allergies.trim() !== "").length;
+      const withInsurance = data.filter(p => p.insurance_provider && p.insurance_provider.trim() !== "").length;
+
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statWeek").textContent = newThisWeek;
+      document.getElementById("statAllergy").textContent = withAllergies;
+      document.getElementById("statInsured").textContent = withInsurance;
+
+      const tbody = document.getElementById("patientTableBody");
+      const recent = data.slice(0, 8);
+      if (recent.length === 0) {
+        document.getElementById("patientEmpty").classList.remove("hidden");
+      } else {
+        tbody.innerHTML = recent.map(p => `
+          <tr>
+            <td>${escapeHtml(p.first_name || "")} ${escapeHtml(p.last_name || "")}</td>
+            <td>${escapeHtml(p.dob || "—")}</td>
+            <td>${escapeHtml(p.blood_type || "—")}</td>
+            <td>${escapeHtml(p.insurance_provider || "—")}</td>
+            <td>${p.created_at ? new Date(p.created_at).toLocaleDateString() : "—"}</td>
+          </tr>
+        `).join("");
+      }
+
+      document.getElementById("exportBtn").addEventListener("click", () => exportCsv(data));
+    } catch (err) {
+      showDashboardAlert("Couldn't load patient statistics. The table may be empty or unavailable.");
+    }
+  }
+
+  async function loadUserData(userId, email) {
+    const statusEl = document.getElementById("mySubmissionsStatus");
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("patients")
+        .select("id, created_at")
+        .eq("email", email)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      statusEl.textContent = data.length > 0
+        ? `${data.length} record${data.length === 1 ? "" : "s"} on file`
+        : "No records submitted yet";
+    } catch (err) {
+      statusEl.textContent = "Couldn't check your records right now.";
+    }
+  }
+
+  function exportCsv(rows) {
+    if (!rows.length) return;
+    const headers = Object.keys(rows[0]);
+    const csv = [headers.join(",")]
+      .concat(rows.map(r => headers.map(h => `"${String(r[h] ?? "").replace(/"/g, '""')}"`).join(",")))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "patients_export.csv";
+    link.click();
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  // Point admins to the Supabase project dashboard (fill in your project ref)
+  document.getElementById("openSupabaseLink").href = "https://supabase.com/dashboard/project/YOUR-PROJECT-REF/editor";
+</script>
+</body>
+</html>
