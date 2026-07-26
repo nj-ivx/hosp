@@ -119,6 +119,19 @@
             <div id="patientEmpty" class="empty-state hidden">No patient records yet.</div>
           </div>
         </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Appointments</h2></div>
+          <div class="card" style="padding: 8px 0; overflow-x:auto;">
+            <table id="apptTable">
+              <thead>
+                <tr><th>Patient</th><th>Department</th><th>Date</th><th>Time</th><th>Status</th></tr>
+              </thead>
+              <tbody id="apptTableBody"></tbody>
+            </table>
+            <div id="apptEmpty" class="empty-state hidden">No appointments booked yet.</div>
+          </div>
+        </section>
       </div>
 
       <!-- ==== PATIENT VIEW ==== -->
@@ -129,10 +142,20 @@
             <h3>Start registration</h3>
             <p>Submit your health record intake form</p>
           </a>
+          <a class="card action-card" href="appointment.html" style="text-decoration:none; color:inherit;">
+            <span class="icon">📅</span>
+            <h3>Book an appointment</h3>
+            <p>Schedule a visit with a department</p>
+          </a>
           <div class="card action-card">
             <span class="icon">📋</span>
             <h3>My submissions</h3>
             <p id="mySubmissionsStatus" class="muted">Checking your records…</p>
+          </div>
+          <div class="card action-card">
+            <span class="icon">🗓️</span>
+            <h3>My appointments</h3>
+            <p id="myApptStatus" class="muted">Checking your appointments…</p>
           </div>
           <div class="card action-card">
             <span class="icon">💬</span>
@@ -207,11 +230,13 @@
       document.getElementById("subGreeting").textContent = "System overview and patient records.";
       document.getElementById("adminView").classList.remove("hidden");
       await loadAdminData();
+      await loadAdminAppointments();
     } else if (role === "user") {
       document.getElementById("roleBadge").textContent = "Patient";
       document.getElementById("subGreeting").textContent = "Manage your health record submissions.";
       document.getElementById("userView").classList.remove("hidden");
       await loadUserData(session.user.id, session.user.email);
+      await loadUserAppointments(session.user.id);
     } else {
       showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
     }
@@ -257,6 +282,52 @@
       document.getElementById("exportBtn").addEventListener("click", () => exportCsv(data));
     } catch (err) {
       showDashboardAlert("Couldn't load patient statistics. The table may be empty or unavailable.");
+    }
+  }
+
+  async function loadAdminAppointments() {
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("appointments")
+        .select("*")
+        .order("appointment_date", { ascending: true });
+      if (error) throw error;
+
+      const tbody = document.getElementById("apptTableBody");
+      if (data.length === 0) {
+        document.getElementById("apptEmpty").classList.remove("hidden");
+      } else {
+        tbody.innerHTML = data.map(a => `
+          <tr>
+            <td>${escapeHtml(a.patient_name || "")}<br><span class="muted" style="font-size:12px;">${escapeHtml(a.patient_email || "")}</span></td>
+            <td>${escapeHtml(a.department || "—")}</td>
+            <td>${a.appointment_date || "—"}</td>
+            <td>${escapeHtml(a.appointment_time || "—")}</td>
+            <td><span class="badge ${a.status === 'confirmed' ? 'badge-user' : 'badge-admin'}">${escapeHtml(a.status || "pending")}</span></td>
+          </tr>
+        `).join("");
+      }
+    } catch (err) {
+      // Non-fatal: patient stats above still loaded fine, just note this panel failed
+      document.getElementById("apptEmpty").textContent = "Couldn't load appointments right now.";
+      document.getElementById("apptEmpty").classList.remove("hidden");
+    }
+  }
+
+  async function loadUserAppointments(userId) {
+    const statusEl = document.getElementById("myApptStatus");
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("appointments")
+        .select("id, appointment_date, status")
+        .eq("user_id", userId)
+        .order("appointment_date", { ascending: true });
+      if (error) throw error;
+      statusEl.textContent = data.length > 0
+        ? `${data.length} appointment${data.length === 1 ? "" : "s"} booked`
+        : "No appointments booked yet";
+    } catch (err) {
+      statusEl.textContent = "Couldn't check your appointments right now.";
     }
   }
 
