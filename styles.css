@@ -88,6 +88,46 @@ body {
   color: var(--ink);
   transition: background var(--transition), color var(--transition);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ---- Ambient background: slow-drifting teal/mint glow blobs ---- */
+body::before, body::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+body::before {
+  width: 480px;
+  height: 480px;
+  top: -160px;
+  left: -120px;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  animation: driftA 22s ease-in-out infinite;
+}
+body::after {
+  width: 560px;
+  height: 560px;
+  bottom: -200px;
+  right: -160px;
+  background: radial-gradient(circle, var(--primary), transparent 70%);
+  animation: driftB 26s ease-in-out infinite;
+}
+[data-theme="dark"] body::before,
+[data-theme="dark"] body::after { opacity: 0.22; }
+
+@keyframes driftA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 40px) scale(1.15); }
+}
+@keyframes driftB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-50px, -30px) scale(1.1); }
 }
 
 h1, h2, h3, .display {
@@ -144,7 +184,15 @@ code, .mono { font-family: var(--font-mono); }
   font-size: 17px;
   color: var(--ink);
 }
-.brand .mark { color: var(--primary); }
+.brand .mark {
+  color: var(--primary);
+  display: inline-block;
+  animation: markPulse 2.4s ease-in-out infinite;
+}
+@keyframes markPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
 .nav-actions { display: flex; align-items: center; gap: 12px; }
 
 /* ---- Vital line: signature motif ---- */
@@ -161,6 +209,16 @@ code, .mono { font-family: var(--font-mono); }
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: drawLine 1.4s ease-out forwards, pulseLine 2.6s ease-in-out 1.4s infinite;
+}
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pulseLine {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 /* ---- Theme toggle ---- */
@@ -198,14 +256,21 @@ code, .mono { font-family: var(--font-mono); }
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
 }
-.btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--primary); color: #fff; }
-.btn-primary:hover { background: var(--primary-strong); }
+.btn:active { transform: translateY(1px) scale(0.98); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--accent-strong));
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(11, 35, 39, 0.12);
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 20px -4px var(--accent-strong);
+  transform: translateY(-1px);
+}
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border); }
-.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
 .btn-danger { background: var(--danger); color: #fff; }
 .btn-block { width: 100%; }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 
 /* ---- Cards ---- */
 .card {
@@ -213,6 +278,7 @@ code, .mono { font-family: var(--font-mono); }
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+  animation: cardIn 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .card-float {
   background: var(--surface-glass);
@@ -221,6 +287,11 @@ code, .mono { font-family: var(--font-mono); }
   border: 1px solid var(--surface-glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  animation: cardIn 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---- Forms ---- */

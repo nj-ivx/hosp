@@ -34,9 +34,18 @@
     transition: transform var(--transition), box-shadow var(--transition);
   }
   .action-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-  .action-card .icon { font-size: 22px; margin-bottom: 10px; display: block; }
+  .action-card .icon { font-size: 22px; margin-bottom: 10px; display: block; transition: transform 220ms ease; }
+  .action-card:hover .icon { transform: scale(1.2) rotate(-4deg); }
   .action-card h3 { font-size: 15.5px; margin-bottom: 4px; }
   .action-card p { font-size: 13px; color: var(--ink-muted); margin: 0; }
+  .stat-grid .stat-card:nth-child(1) { animation-delay: 0ms; }
+  .stat-grid .stat-card:nth-child(2) { animation-delay: 60ms; }
+  .stat-grid .stat-card:nth-child(3) { animation-delay: 120ms; }
+  .stat-grid .stat-card:nth-child(4) { animation-delay: 180ms; }
+  .action-grid .action-card:nth-child(1) { animation-delay: 0ms; }
+  .action-grid .action-card:nth-child(2) { animation-delay: 70ms; }
+  .action-grid .action-card:nth-child(3) { animation-delay: 140ms; }
+  .action-grid .action-card:nth-child(4) { animation-delay: 210ms; }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
   th { color: var(--ink-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
