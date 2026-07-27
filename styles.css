@@ -5,7 +5,7 @@
    watching over patient data.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Cairo:wght@500;600;700&display=swap');
 
 :root {
   /* ---- Color: clinical teal, cool neutrals ---- */
@@ -139,6 +139,28 @@ h1, h2, h3, .display {
 
 a { color: var(--primary); }
 code, .mono { font-family: var(--font-mono); }
+
+/* ---- Arabic / RTL ---- */
+[dir="rtl"] body,
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] .display {
+  font-family: 'Cairo', 'Inter', sans-serif;
+}
+[dir="rtl"] .theme-toggle::after { right: 2px; left: auto; }
+[dir="rtl"] [data-theme="dark"] .theme-toggle::after { transform: translateX(-18px); }
+
+.lang-toggle {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12.5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+.lang-toggle:hover { border-color: var(--primary); color: var(--primary); }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }

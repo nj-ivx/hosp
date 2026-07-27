@@ -59,17 +59,18 @@
 
   <div id="loading" class="loading-screen">
     <div class="spinner"></div>
-    <span>Verifying your session…</span>
+    <span data-i18n="verifying_session">Verifying your session…</span>
   </div>
 
   <div id="app">
     <nav class="navbar">
       <div class="container">
-        <div class="brand"><span class="mark">✚</span> Feras Company Medical Portal</div>
+        <div class="brand"><span class="mark">✚</span> <span data-i18n="brand">Feras Company Medical Portal</span></div>
         <div class="nav-actions">
-          <span id="roleBadge" class="badge badge-user">Patient</span>
+          <span id="roleBadge" class="badge badge-user" data-i18n="badge_patient">Patient</span>
+          <button class="lang-toggle" id="langToggle">AR</button>
           <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
-          <button class="btn btn-ghost" id="logoutBtn">Log Out</button>
+          <button class="btn btn-ghost" id="logoutBtn" data-i18n="logout">Log Out</button>
         </div>
       </div>
     </nav>
@@ -89,39 +90,39 @@
       <!-- ==== ADMIN VIEW ==== -->
       <div id="adminView" class="hidden">
         <div class="stat-grid">
-          <div class="card stat-card"><div class="value" id="statTotal">–</div><div class="label">Total patients</div></div>
-          <div class="card stat-card"><div class="value" id="statWeek">–</div><div class="label">New this week</div></div>
-          <div class="card stat-card"><div class="value" id="statAllergy">–</div><div class="label">With allergies on file</div></div>
-          <div class="card stat-card"><div class="value" id="statInsured">–</div><div class="label">With insurance on file</div></div>
+          <div class="card stat-card"><div class="value" id="statTotal">–</div><div class="label" data-i18n="stat_total">Total patients</div></div>
+          <div class="card stat-card"><div class="value" id="statWeek">–</div><div class="label" data-i18n="stat_week">New this week</div></div>
+          <div class="card stat-card"><div class="value" id="statAllergy">–</div><div class="label" data-i18n="stat_allergy">With allergies on file</div></div>
+          <div class="card stat-card"><div class="value" id="statInsured">–</div><div class="label" data-i18n="stat_insured">With insurance on file</div></div>
         </div>
 
         <section class="panel">
-          <div class="panel-head"><h2>Database access</h2></div>
+          <div class="panel-head"><h2 data-i18n="panel_db_access">Database access</h2></div>
           <div class="action-grid">
             <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
               <span class="icon">📝</span>
-              <h3>New intake form</h3>
-              <p>Register a patient manually</p>
+              <h3 data-i18n="action_new_intake">New intake form</h3>
+              <p data-i18n="action_new_intake_desc">Register a patient manually</p>
             </a>
             <a class="card action-card" id="openSupabaseLink" href="#" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
               <span class="icon">🗄️</span>
-              <h3>Supabase table editor</h3>
-              <p>Direct database access</p>
+              <h3 data-i18n="action_supabase">Supabase table editor</h3>
+              <p data-i18n="action_supabase_desc">Direct database access</p>
             </a>
             <div class="card action-card" id="exportBtn">
               <span class="icon">⬇️</span>
-              <h3>Export records</h3>
-              <p>Download patients as CSV</p>
+              <h3 data-i18n="action_export">Export records</h3>
+              <p data-i18n="action_export_desc">Download patients as CSV</p>
             </div>
           </div>
         </section>
 
         <section class="panel">
-          <div class="panel-head"><h2>Recent patients</h2></div>
+          <div class="panel-head"><h2 data-i18n="panel_recent_patients">Recent patients</h2></div>
           <div class="card" style="padding: 8px 0; overflow-x:auto;">
             <table id="patientTable">
               <thead>
-                <tr><th>Name</th><th>DOB</th><th>Blood type</th><th>Insurance</th><th>Registered</th></tr>
+                <tr><th data-i18n="th_name">Name</th><th data-i18n="th_dob">DOB</th><th data-i18n="th_blood">Blood type</th><th data-i18n="th_insurance">Insurance</th><th data-i18n="th_registered">Registered</th></tr>
               </thead>
               <tbody id="patientTableBody"></tbody>
             </table>
@@ -130,11 +131,11 @@
         </section>
 
         <section class="panel">
-          <div class="panel-head"><h2>Appointments</h2></div>
+          <div class="panel-head"><h2 data-i18n="panel_appointments">Appointments</h2></div>
           <div class="card" style="padding: 8px 0; overflow-x:auto;">
             <table id="apptTable">
               <thead>
-                <tr><th>Patient</th><th>Department</th><th>Date</th><th>Time</th><th>Status</th></tr>
+                <tr><th data-i18n="th_patient">Patient</th><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th></tr>
               </thead>
               <tbody id="apptTableBody"></tbody>
             </table>
@@ -148,28 +149,28 @@
         <div class="action-grid">
           <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
             <span class="icon">📝</span>
-            <h3>Start registration</h3>
-            <p>Submit your health record intake form</p>
+            <h3 data-i18n="action_start_registration">Start registration</h3>
+            <p data-i18n="action_start_registration_desc">Submit your health record intake form</p>
           </a>
           <a class="card action-card" href="appointment.html" style="text-decoration:none; color:inherit;">
             <span class="icon">📅</span>
-            <h3>Book an appointment</h3>
-            <p>Schedule a visit with a department</p>
+            <h3 data-i18n="action_book_appt">Book an appointment</h3>
+            <p data-i18n="action_book_appt_desc">Schedule a visit with a department</p>
           </a>
           <div class="card action-card">
             <span class="icon">📋</span>
-            <h3>My submissions</h3>
+            <h3 data-i18n="action_my_submissions">My submissions</h3>
             <p id="mySubmissionsStatus" class="muted">Checking your records…</p>
           </div>
           <div class="card action-card">
             <span class="icon">🗓️</span>
-            <h3>My appointments</h3>
+            <h3 data-i18n="action_my_appt">My appointments</h3>
             <p id="myApptStatus" class="muted">Checking your appointments…</p>
           </div>
           <div class="card action-card">
             <span class="icon">💬</span>
-            <h3>Need help?</h3>
-            <p>Use the chat assistant in the bottom corner</p>
+            <h3 data-i18n="action_help">Need help?</h3>
+            <p data-i18n="action_help_desc">Use the chat assistant in the bottom corner</p>
           </div>
         </div>
       </div>
@@ -179,6 +180,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
+<script src="i18n.js"></script>
 <!-- Chatbase floating widget -->
 <script>
   window.chatbaseConfig = { chatbotId: "Ie42z57d6pT_nwLvZF5c7" };
@@ -221,8 +223,9 @@
     if (!session) return; // requireSession already redirects
 
     const email = session.user.email || "";
+    const dict = window.I18N[localStorage.getItem("lang") || "en"];
     document.getElementById("greeting").textContent =
-      `Welcome back${email ? ", " + email.split("@")[0] : ""}`;
+      `${dict.greeting_default}${email ? ", " + email.split("@")[0] : ""}`;
 
     let role;
     try {
@@ -234,15 +237,15 @@
     }
 
     if (role === "admin") {
-      document.getElementById("roleBadge").textContent = "Administrator";
+      document.getElementById("roleBadge").textContent = dict.badge_admin;
       document.getElementById("roleBadge").className = "badge badge-admin";
-      document.getElementById("subGreeting").textContent = "System overview and patient records.";
+      document.getElementById("subGreeting").textContent = dict.sub_admin;
       document.getElementById("adminView").classList.remove("hidden");
       await loadAdminData();
       await loadAdminAppointments();
     } else if (role === "user") {
-      document.getElementById("roleBadge").textContent = "Patient";
-      document.getElementById("subGreeting").textContent = "Manage your health record submissions.";
+      document.getElementById("roleBadge").textContent = dict.badge_patient;
+      document.getElementById("subGreeting").textContent = dict.sub_patient;
       document.getElementById("userView").classList.remove("hidden");
       await loadUserData(session.user.id, session.user.email);
       await loadUserAppointments(session.user.id);

@@ -24,8 +24,9 @@
 
   <nav class="navbar">
     <div class="container">
-      <div class="brand"><span class="mark">✚</span> Feras Company Medical Portal</div>
+      <div class="brand"><span class="mark">✚</span> <span data-i18n="brand">Feras Company Medical Portal</span></div>
       <div class="nav-actions">
+        <button class="lang-toggle" id="langToggle">AR</button>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
       </div>
     </div>
@@ -36,12 +37,12 @@
   </svg>
 
   <main class="container form-shell">
-    <a class="back-link" href="index.html">← Back to dashboard</a>
+    <a class="back-link" href="index.html" data-i18n="back_dashboard">← Back to dashboard</a>
 
     <div id="formWrap">
       <div class="form-head">
-        <h1>Patient Intake Form</h1>
-        <p class="muted">All fields marked required must be completed before submitting.</p>
+        <h1 data-i18n="intake_title">Patient Intake Form</h1>
+        <p class="muted" data-i18n="intake_sub">All fields marked required must be completed before submitting.</p>
       </div>
 
       <div id="formAlert" class="alert alert-error" hidden role="alert"></div>
@@ -49,24 +50,24 @@
       <form id="intakeForm" class="card" style="padding: 28px;">
 
         <fieldset>
-          <legend>Personal Information</legend>
+          <legend data-i18n="section_personal">Personal Information</legend>
           <div class="grid-2">
             <div class="field">
-              <label for="first_name">First name *</label>
+              <label for="first_name" data-i18n="label_first_name">First name *</label>
               <input type="text" id="first_name" name="first_name" required>
             </div>
             <div class="field">
-              <label for="last_name">Last name *</label>
+              <label for="last_name" data-i18n="label_last_name">Last name *</label>
               <input type="text" id="last_name" name="last_name" required>
             </div>
           </div>
           <div class="grid-3">
             <div class="field">
-              <label for="dob">Date of birth *</label>
+              <label for="dob" data-i18n="label_dob">Date of birth *</label>
               <input type="date" id="dob" name="dob" required>
             </div>
             <div class="field">
-              <label for="gender">Gender</label>
+              <label for="gender" data-i18n="label_gender">Gender</label>
               <select id="gender" name="gender">
                 <option value="">Select…</option>
                 <option>Female</option>
@@ -76,27 +77,27 @@
               </select>
             </div>
             <div class="field">
-              <label for="phone">Phone *</label>
+              <label for="phone" data-i18n="label_phone">Phone *</label>
               <input type="tel" id="phone" name="phone" required>
             </div>
           </div>
           <div class="grid-2">
             <div class="field">
-              <label for="email">Email *</label>
+              <label for="email" data-i18n="label_email">Email *</label>
               <input type="email" id="email" name="email" required>
             </div>
             <div class="field">
-              <label for="address">Address</label>
+              <label for="address" data-i18n="label_address">Address</label>
               <input type="text" id="address" name="address">
             </div>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Medical History</legend>
+          <legend data-i18n="section_medical">Medical History</legend>
           <div class="grid-2">
             <div class="field">
-              <label for="blood_type">Blood type</label>
+              <label for="blood_type" data-i18n="label_blood_type">Blood type</label>
               <select id="blood_type" name="blood_type">
                 <option value="">Unknown</option>
                 <option>A+</option><option>A-</option>
@@ -106,52 +107,52 @@
               </select>
             </div>
             <div class="field">
-              <label for="weight">Weight (kg)</label>
+              <label for="weight" data-i18n="label_weight">Weight (kg)</label>
               <input type="number" id="weight" name="weight" min="0" step="0.1">
             </div>
           </div>
           <div class="field">
-            <label for="allergies">Known allergies</label>
+            <label for="allergies" data-i18n="label_allergies">Known allergies</label>
             <textarea id="allergies" name="allergies" rows="2" placeholder="e.g. Penicillin, peanuts"></textarea>
           </div>
           <div class="field">
-            <label for="medications">Current medications</label>
+            <label for="medications" data-i18n="label_medications">Current medications</label>
             <textarea id="medications" name="medications" rows="2"></textarea>
           </div>
           <div class="field">
-            <label for="conditions">Existing conditions</label>
+            <label for="conditions" data-i18n="label_conditions">Existing conditions</label>
             <textarea id="conditions" name="conditions" rows="2"></textarea>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Insurance</legend>
+          <legend data-i18n="section_insurance">Insurance</legend>
           <div class="grid-2">
             <div class="field">
-              <label for="insurance_provider">Provider</label>
+              <label for="insurance_provider" data-i18n="label_provider">Provider</label>
               <input type="text" id="insurance_provider" name="insurance_provider">
             </div>
             <div class="field">
-              <label for="policy_number">Policy number</label>
+              <label for="policy_number" data-i18n="label_policy">Policy number</label>
               <input type="text" id="policy_number" name="policy_number">
             </div>
           </div>
         </fieldset>
 
         <div class="row" style="justify-content: flex-end; gap: 12px;">
-          <a class="btn btn-ghost" href="index.html">Cancel</a>
-          <button type="submit" class="btn btn-primary" id="submitBtn">Submit Intake Form</button>
+          <a class="btn btn-ghost" href="index.html" data-i18n="btn_cancel">Cancel</a>
+          <button type="submit" class="btn btn-primary" id="submitBtn" data-i18n="btn_submit_intake">Submit Intake Form</button>
         </div>
       </form>
     </div>
 
     <div id="successScreen" class="success-screen card">
       <span class="icon">✅</span>
-      <h2>Form submitted</h2>
-      <p class="muted">The patient record has been saved.</p>
+      <h2 data-i18n="intake_success_title">Form submitted</h2>
+      <p class="muted" data-i18n="intake_success_desc">The patient record has been saved.</p>
       <div class="row" style="justify-content:center; margin-top:20px;">
-        <a class="btn btn-primary" href="index.html">Back to dashboard</a>
-        <button class="btn btn-ghost" id="submitAnotherBtn">Submit another</button>
+        <a class="btn btn-primary" href="index.html" data-i18n="back_dashboard">Back to dashboard</a>
+        <button class="btn btn-ghost" id="submitAnotherBtn" data-i18n="btn_submit_another">Submit another</button>
       </div>
     </div>
   </main>
@@ -159,6 +160,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
+<script src="i18n.js"></script>
 <!-- Chatbase floating widget -->
 <script>
   window.chatbaseConfig = { chatbotId: "Ie42z57d6pT_nwLvZF5c7" };

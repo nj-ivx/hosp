@@ -25,8 +25,9 @@
 
   <nav class="navbar">
     <div class="container">
-      <div class="brand"><span class="mark">✚</span> Feras Company Medical Portal</div>
+      <div class="brand"><span class="mark">✚</span> <span data-i18n="brand">Feras Company Medical Portal</span></div>
       <div class="nav-actions">
+        <button class="lang-toggle" id="langToggle">AR</button>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
       </div>
     </div>
@@ -37,27 +38,27 @@
   </svg>
 
   <main class="container form-shell">
-    <a class="back-link" href="index.html">← Back to dashboard</a>
+    <a class="back-link" href="index.html" data-i18n="back_dashboard">← Back to dashboard</a>
 
     <div id="formWrap">
       <div class="form-head center">
-        <h1>Book an Appointment</h1>
-        <p class="muted">Pick a department and a time that works for you.</p>
+        <h1 data-i18n="appt_title">Book an Appointment</h1>
+        <p class="muted" data-i18n="appt_sub">Pick a department and a time that works for you.</p>
       </div>
 
       <div id="formAlert" class="alert alert-error" hidden role="alert"></div>
 
       <form id="apptForm" class="card card-form">
         <div class="field">
-          <label for="patient_name">Full name *</label>
+          <label for="patient_name" data-i18n="label_full_name">Full name *</label>
           <input type="text" id="patient_name" name="patient_name" required>
         </div>
         <div class="field">
-          <label for="patient_email">Email *</label>
+          <label for="patient_email" data-i18n="label_email">Email *</label>
           <input type="email" id="patient_email" name="patient_email" required>
         </div>
         <div class="field">
-          <label for="department">Department *</label>
+          <label for="department" data-i18n="label_department">Department *</label>
           <select id="department" name="department" required>
             <option value="">Select…</option>
             <option>General Medicine</option>
@@ -70,32 +71,32 @@
         </div>
         <div class="grid-2">
           <div class="field">
-            <label for="appointment_date">Date *</label>
+            <label for="appointment_date" data-i18n="label_date">Date *</label>
             <input type="date" id="appointment_date" name="appointment_date" required>
           </div>
           <div class="field">
-            <label for="appointment_time">Time *</label>
+            <label for="appointment_time" data-i18n="label_time">Time *</label>
             <input type="time" id="appointment_time" name="appointment_time" required>
           </div>
         </div>
         <div class="field">
-          <label for="reason">Reason for visit</label>
+          <label for="reason" data-i18n="label_reason">Reason for visit</label>
           <textarea id="reason" name="reason" rows="3" placeholder="Briefly describe why you're booking"></textarea>
         </div>
         <div class="row" style="justify-content: flex-end; gap: 12px;">
-          <a class="btn btn-ghost" href="index.html">Cancel</a>
-          <button type="submit" class="btn btn-primary" id="submitBtn">Book Appointment</button>
+          <a class="btn btn-ghost" href="index.html" data-i18n="btn_cancel">Cancel</a>
+          <button type="submit" class="btn btn-primary" id="submitBtn" data-i18n="btn_book_appt">Book Appointment</button>
         </div>
       </form>
     </div>
 
     <div id="successScreen" class="success-screen card">
       <span class="icon">📅</span>
-      <h2>Appointment requested</h2>
-      <p class="muted">We've logged your request as pending confirmation.</p>
+      <h2 data-i18n="appt_success_title">Appointment requested</h2>
+      <p class="muted" data-i18n="appt_success_desc">We've logged your request as pending confirmation.</p>
       <div class="row" style="justify-content:center; margin-top:20px;">
-        <a class="btn btn-primary" href="index.html">Back to dashboard</a>
-        <button class="btn btn-ghost" id="bookAnotherBtn">Book another</button>
+        <a class="btn btn-primary" href="index.html" data-i18n="back_dashboard">Back to dashboard</a>
+        <button class="btn btn-ghost" id="bookAnotherBtn" data-i18n="btn_book_another">Book another</button>
       </div>
     </div>
   </main>
@@ -103,6 +104,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
+<script src="i18n.js"></script>
 <!-- Chatbase floating widget -->
 <script>
   window.chatbaseConfig = { chatbotId: "Ie42z57d6pT_nwLvZF5c7" };

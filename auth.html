@@ -45,8 +45,9 @@
 
   <nav class="navbar">
     <div class="container">
-      <div class="brand"><span class="mark">✚</span> Feras Company Medical Portal</div>
+      <div class="brand"><span class="mark">✚</span> <span data-i18n="brand">Feras Company Medical Portal</span></div>
       <div class="nav-actions">
+        <button class="lang-toggle" id="langToggle">AR</button>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"></button>
       </div>
     </div>
@@ -59,13 +60,13 @@
   <main class="auth-shell">
     <div class="card-float auth-card">
       <div class="auth-head">
-        <h1>Welcome</h1>
-        <p class="muted">Sign in to manage patient records</p>
+        <h1 data-i18n="welcome">Welcome</h1>
+        <p class="muted" data-i18n="signin_sub">Sign in to manage patient records</p>
       </div>
 
       <div class="tabs">
-        <div class="tab active" data-tab="login">Log In</div>
-        <div class="tab" data-tab="signup">Sign Up</div>
+        <div class="tab active" data-tab="login" data-i18n="tab_login">Log In</div>
+        <div class="tab" data-tab="signup" data-i18n="tab_signup">Sign Up</div>
       </div>
 
       <div id="globalAlert" class="alert alert-error" hidden role="alert"></div>
@@ -73,46 +74,47 @@
       <!-- Login -->
       <form id="loginForm" class="auth-form active stack">
         <div class="field">
-          <label for="loginEmail">Email</label>
+          <label for="loginEmail" data-i18n="label_email">Email</label>
           <input type="email" id="loginEmail" required autocomplete="email">
         </div>
         <div class="field">
-          <label for="loginPassword">Password</label>
+          <label for="loginPassword" data-i18n="label_password">Password</label>
           <input type="password" id="loginPassword" required autocomplete="current-password">
         </div>
-        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Log In</button>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn" data-i18n="btn_login">Log In</button>
       </form>
 
       <!-- Sign up -->
       <form id="signupForm" class="auth-form stack">
         <div class="grid-2">
           <div class="field">
-            <label for="suFirst">First name</label>
+            <label for="suFirst" data-i18n="label_first_name">First name</label>
             <input type="text" id="suFirst" required autocomplete="given-name">
           </div>
           <div class="field">
-            <label for="suLast">Last name</label>
+            <label for="suLast" data-i18n="label_last_name">Last name</label>
             <input type="text" id="suLast" required autocomplete="family-name">
           </div>
         </div>
         <div class="field">
-          <label for="suEmail">Email</label>
+          <label for="suEmail" data-i18n="label_email">Email</label>
           <input type="email" id="suEmail" required autocomplete="email">
         </div>
         <div class="field">
-          <label for="suPassword">Password</label>
+          <label for="suPassword" data-i18n="label_password">Password</label>
           <input type="password" id="suPassword" required minlength="8" autocomplete="new-password">
         </div>
-        <button type="submit" class="btn btn-primary btn-block" id="signupBtn">Create Account</button>
+        <button type="submit" class="btn btn-primary btn-block" id="signupBtn" data-i18n="btn_signup">Create Account</button>
       </form>
 
-      <p class="fine-print muted">New accounts are created with standard patient access.</p>
+      <p class="fine-print muted" data-i18n="signup_fineprint">New accounts are created with standard patient access.</p>
     </div>
   </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabaseClient.js"></script>
+<script src="i18n.js"></script>
 <!-- Chatbase floating widget -->
 <script>
   window.chatbaseConfig = { chatbotId: "Ie42z57d6pT_nwLvZF5c7" };
