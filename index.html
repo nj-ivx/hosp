@@ -17,41 +17,57 @@
     color: var(--ink-muted);
     font-size: 14px;
   }
-  .hero {
-    padding: 40px 0 28px;
-  }
+  .hero { padding: 40px 0 28px; }
   .hero h1 { font-size: 26px; margin-bottom: 6px; }
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
-  @media (max-width: 800px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 800px) { .stat-grid, .stat-grid.cols-3 { grid-template-columns: repeat(2, 1fr); } }
   .stat-card { padding: 20px; }
   .stat-card .value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--primary); }
   .stat-card .label { font-size: 12.5px; color: var(--ink-muted); margin-top: 4px; }
   .action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   @media (max-width: 800px) { .action-grid { grid-template-columns: 1fr; } }
-  .action-card {
-    padding: 22px;
-    cursor: pointer;
-    transition: transform var(--transition), box-shadow var(--transition);
-  }
+  .action-card { padding: 22px; cursor: pointer; transition: transform var(--transition), box-shadow var(--transition); }
   .action-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
   .action-card .icon { font-size: 22px; margin-bottom: 10px; display: block; transition: transform 220ms ease; }
   .action-card:hover .icon { transform: scale(1.2) rotate(-4deg); }
   .action-card h3 { font-size: 15.5px; margin-bottom: 4px; }
   .action-card p { font-size: 13px; color: var(--ink-muted); margin: 0; }
-  .stat-grid .stat-card:nth-child(1) { animation-delay: 0ms; }
-  .stat-grid .stat-card:nth-child(2) { animation-delay: 60ms; }
-  .stat-grid .stat-card:nth-child(3) { animation-delay: 120ms; }
-  .stat-grid .stat-card:nth-child(4) { animation-delay: 180ms; }
-  .action-grid .action-card:nth-child(1) { animation-delay: 0ms; }
-  .action-grid .action-card:nth-child(2) { animation-delay: 70ms; }
-  .action-grid .action-card:nth-child(3) { animation-delay: 140ms; }
-  .action-grid .action-card:nth-child(4) { animation-delay: 210ms; }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
   th { color: var(--ink-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
   section.panel { margin-bottom: 32px; }
-  .panel-head { margin-bottom: 14px; }
+  .panel-head { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .panel-head h2 { font-size: 17px; }
+
+  /* Logo */
+  .brand-logo { display: inline-flex; }
+  .brand-logo svg { display: block; }
+
+  /* Doctors */
+  .doctor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 800px) { .doctor-grid { grid-template-columns: 1fr; } }
+  .doctor-card { padding: 18px; }
+  .doctor-card .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary-soft); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .doctor-card h3 { font-size: 15px; margin-bottom: 2px; }
+  .doctor-card .dept { font-size: 12.5px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
+  .doctor-card p.bio { font-size: 13px; color: var(--ink-muted); margin: 0 0 12px; }
+  .doctor-card .doc-actions { display: flex; gap: 8px; }
+  .doctor-card .doc-actions button { font-size: 12px; padding: 5px 10px; }
+  #addDoctorForm { display: none; margin-top: 16px; padding: 20px; }
+  #addDoctorForm.open { display: block; }
+
+  /* Appointment management */
+  .appt-actions { display: flex; gap: 6px; align-items: center; }
+  .appt-actions select { font-size: 12.5px; padding: 6px 8px; width: auto; }
+  .appt-actions button { font-size: 12px; padding: 6px 10px; }
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--ink-muted); }
 </style>
 </head>
 <body>
@@ -65,7 +81,21 @@
   <div id="app">
     <nav class="navbar">
       <div class="container">
-        <div class="brand"><span class="mark">✚</span> <span data-i18n="brand">Feras Company Medical Portal</span></div>
+        <div class="brand">
+          <span class="brand-logo" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+              <rect width="28" height="28" rx="8" fill="url(#logoGrad1)"/>
+              <path d="M14 7v14M7 14h14" stroke="white" stroke-width="3" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="logoGrad1" x1="0" y1="0" x2="28" y2="28">
+                  <stop stop-color="#0B5D66"/>
+                  <stop offset="1" stop-color="#2FBFA0"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span data-i18n="brand">Feras Company Medical Portal</span>
+        </div>
         <div class="nav-actions">
           <span id="roleBadge" class="badge badge-user" data-i18n="badge_patient">Patient</span>
           <button class="lang-toggle" id="langToggle">AR</button>
@@ -135,7 +165,7 @@
           <div class="card" style="padding: 8px 0; overflow-x:auto;">
             <table id="apptTable">
               <thead>
-                <tr><th data-i18n="th_patient">Patient</th><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th></tr>
+                <tr><th data-i18n="th_patient">Patient</th><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th><th data-i18n="th_manage">Manage</th></tr>
               </thead>
               <tbody id="apptTableBody"></tbody>
             </table>
@@ -146,34 +176,77 @@
 
       <!-- ==== PATIENT VIEW ==== -->
       <div id="userView" class="hidden">
-        <div class="action-grid">
-          <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
-            <span class="icon">📝</span>
-            <h3 data-i18n="action_start_registration">Start registration</h3>
-            <p data-i18n="action_start_registration_desc">Submit your health record intake form</p>
-          </a>
-          <a class="card action-card" href="appointment.html" style="text-decoration:none; color:inherit;">
-            <span class="icon">📅</span>
-            <h3 data-i18n="action_book_appt">Book an appointment</h3>
-            <p data-i18n="action_book_appt_desc">Schedule a visit with a department</p>
-          </a>
-          <div class="card action-card">
-            <span class="icon">📋</span>
-            <h3 data-i18n="action_my_submissions">My submissions</h3>
-            <p id="mySubmissionsStatus" class="muted">Checking your records…</p>
-          </div>
-          <div class="card action-card">
-            <span class="icon">🗓️</span>
-            <h3 data-i18n="action_my_appt">My appointments</h3>
-            <p id="myApptStatus" class="muted">Checking your appointments…</p>
-          </div>
-          <div class="card action-card">
-            <span class="icon">💬</span>
-            <h3 data-i18n="action_help">Need help?</h3>
-            <p data-i18n="action_help_desc">Use the chat assistant in the bottom corner</p>
-          </div>
+        <div class="stat-grid cols-3">
+          <div class="card stat-card"><div class="value" id="myStatSubmissions">–</div><div class="label" data-i18n="stat_my_submissions">My submissions</div></div>
+          <div class="card stat-card"><div class="value" id="myStatAppointments">–</div><div class="label" data-i18n="stat_my_appointments">My appointments</div></div>
+          <div class="card stat-card"><div class="value" id="myStatNext">–</div><div class="label" data-i18n="stat_next_appointment">Next appointment</div></div>
         </div>
+
+        <section class="panel">
+          <div class="action-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <a class="card action-card" href="form.html" style="text-decoration:none; color:inherit;">
+              <span class="icon">📝</span>
+              <h3 data-i18n="action_start_registration">Start registration</h3>
+              <p data-i18n="action_start_registration_desc">Submit your health record intake form</p>
+            </a>
+            <a class="card action-card" href="appointment.html" style="text-decoration:none; color:inherit;">
+              <span class="icon">📅</span>
+              <h3 data-i18n="action_book_appt">Book an appointment</h3>
+              <p data-i18n="action_book_appt_desc">Schedule a visit with a department</p>
+            </a>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2 data-i18n="my_appointments_title">My Appointments</h2></div>
+          <div class="card" style="padding: 8px 0; overflow-x:auto;">
+            <table id="myApptTable">
+              <thead>
+                <tr><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th></tr>
+              </thead>
+              <tbody id="myApptTableBody"></tbody>
+            </table>
+            <div id="myApptEmpty" class="empty-state hidden" data-i18n="no_appointments">No appointments booked yet.</div>
+          </div>
+        </section>
       </div>
+
+      <!-- ==== OUR DOCTORS (shared) ==== -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2 data-i18n="doctors_title">Our Doctors</h2>
+          <button class="btn btn-ghost hidden" id="addDoctorToggle" data-i18n="add_doctor">Add Doctor</button>
+        </div>
+
+        <form id="addDoctorForm" class="card">
+          <div class="grid-2">
+            <div class="field">
+              <label for="docName" data-i18n="doctor_name">Name</label>
+              <input type="text" id="docName" required>
+            </div>
+            <div class="field">
+              <label for="docDept" data-i18n="doctor_department">Department</label>
+              <input type="text" id="docDept">
+            </div>
+          </div>
+          <div class="field">
+            <label for="docSpecialty" data-i18n="doctor_specialty">Specialty</label>
+            <input type="text" id="docSpecialty">
+          </div>
+          <div class="field">
+            <label for="docBio" data-i18n="doctor_bio">Short bio</label>
+            <textarea id="docBio" rows="2"></textarea>
+          </div>
+          <input type="hidden" id="docEditId" value="">
+          <div class="row" style="justify-content:flex-end; gap:10px;">
+            <button type="button" class="btn btn-ghost" id="cancelDoctorForm" data-i18n="btn_cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveDoctorBtn" data-i18n="save">Save</button>
+          </div>
+        </form>
+
+        <div class="doctor-grid" id="doctorsGrid" style="margin-top:16px;"></div>
+        <div id="doctorsEmpty" class="empty-state hidden" data-i18n="no_doctors">No doctors listed yet.</div>
+      </section>
     </main>
   </div>
 </div>
@@ -198,19 +271,21 @@
   const loadingEl = document.getElementById("loading");
   const appEl = document.getElementById("app");
   const dashboardAlert = document.getElementById("dashboardAlert");
-  function showDashboardAlert(msg) {
-    dashboardAlert.textContent = msg;
-    dashboardAlert.hidden = false;
-  }
-  function revealApp() {
-    loadingEl.style.display = "none";
-    appEl.style.display = "block";
+  function showDashboardAlert(msg) { dashboardAlert.textContent = msg; dashboardAlert.hidden = false; }
+  function revealApp() { loadingEl.style.display = "none"; appEl.style.display = "block"; }
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     if (window.supabaseClient) await window.supabaseClient.auth.signOut();
     window.location.href = "auth.html";
   });
+
+  let currentRole = null;
+  let currentUserId = null;
 
   (async function init() {
     if (!window.supabaseClient) {
@@ -221,16 +296,14 @@
 
     try {
       const session = await window.requireSession("auth.html");
-      if (!session) return; // requireSession already redirects
+      if (!session) return;
+      currentUserId = session.user.id;
 
       const email = session.user.email || "";
       const lang = localStorage.getItem("lang") || "en";
       const dict = (window.I18N && window.I18N[lang]) || {
-        greeting_default: "Welcome back",
-        badge_admin: "Administrator",
-        badge_patient: "Patient",
-        sub_admin: "System overview and patient records.",
-        sub_patient: "Manage your health record submissions.",
+        greeting_default: "Welcome back", badge_admin: "Administrator", badge_patient: "Patient",
+        sub_admin: "System overview and patient records.", sub_patient: "Manage your health record submissions.",
       };
       document.getElementById("greeting").textContent =
         `${dict.greeting_default}${email ? ", " + email.split("@")[0] : ""}`;
@@ -242,23 +315,26 @@
         showDashboardAlert("Couldn't verify your account permissions. Please try refreshing.");
         return;
       }
+      currentRole = role;
 
       if (role === "admin") {
         document.getElementById("roleBadge").textContent = dict.badge_admin;
         document.getElementById("roleBadge").className = "badge badge-admin";
         document.getElementById("subGreeting").textContent = dict.sub_admin;
         document.getElementById("adminView").classList.remove("hidden");
+        document.getElementById("addDoctorToggle").classList.remove("hidden");
         await loadAdminData();
         await loadAdminAppointments();
       } else if (role === "user") {
         document.getElementById("roleBadge").textContent = dict.badge_patient;
         document.getElementById("subGreeting").textContent = dict.sub_patient;
         document.getElementById("userView").classList.remove("hidden");
-        await loadUserData(session.user.id, session.user.email);
-        await loadUserAppointments(session.user.id);
+        await loadUserOverviewAndAppointments(session.user.id, session.user.email);
       } else {
         showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
       }
+
+      await loadDoctors();
     } catch (err) {
       console.error("[dashboard] init failed:", err);
       showDashboardAlert("Something went wrong loading the dashboard. Please refresh the page.");
@@ -321,8 +397,75 @@
         document.getElementById("apptEmpty").classList.remove("hidden");
       } else {
         tbody.innerHTML = data.map(a => `
-          <tr>
+          <tr data-id="${a.id}">
             <td>${escapeHtml(a.patient_name || "")}<br><span class="muted" style="font-size:12px;">${escapeHtml(a.patient_email || "")}</span></td>
+            <td>${escapeHtml(a.department || "—")}</td>
+            <td>${a.appointment_date || "—"}</td>
+            <td>${escapeHtml(a.appointment_time || "—")}</td>
+            <td><span class="badge ${a.status === 'confirmed' ? 'badge-user' : (a.status === 'cancelled' ? 'badge-admin' : 'badge-admin')}">${escapeHtml(a.status || "pending")}</span></td>
+            <td>
+              <div class="appt-actions">
+                <select class="apptStatusSelect">
+                  <option value="pending" ${a.status === "pending" ? "selected" : ""}>Pending</option>
+                  <option value="confirmed" ${a.status === "confirmed" ? "selected" : ""}>Confirmed</option>
+                  <option value="cancelled" ${a.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+                </select>
+                <button class="btn btn-primary apptSaveBtn" type="button">Save</button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+
+        tbody.querySelectorAll(".apptSaveBtn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const row = e.target.closest("tr");
+            const id = row.getAttribute("data-id");
+            const select = row.querySelector(".apptStatusSelect");
+            const newStatus = select.value;
+            btn.disabled = true;
+            btn.textContent = "…";
+            try {
+              const { error } = await window.supabaseClient
+                .from("appointments")
+                .update({ status: newStatus })
+                .eq("id", id);
+              if (error) throw error;
+              await loadAdminAppointments();
+            } catch (err) {
+              showDashboardAlert("Couldn't update that appointment. Please try again.");
+              btn.disabled = false;
+              btn.textContent = "Save";
+            }
+          });
+        });
+      }
+    } catch (err) {
+      document.getElementById("apptEmpty").textContent = "Couldn't load appointments right now.";
+      document.getElementById("apptEmpty").classList.remove("hidden");
+    }
+  }
+
+  async function loadUserOverviewAndAppointments(userId, email) {
+    try {
+      const [{ data: patients, error: pErr }, { data: appts, error: aErr }] = await Promise.all([
+        window.supabaseClient.from("patients").select("id").eq("email", email),
+        window.supabaseClient.from("appointments").select("*").eq("user_id", userId).order("appointment_date", { ascending: true }),
+      ]);
+      if (pErr) throw pErr;
+      if (aErr) throw aErr;
+
+      document.getElementById("myStatSubmissions").textContent = patients.length;
+      document.getElementById("myStatAppointments").textContent = appts.length;
+
+      const upcoming = appts.find(a => a.status !== "cancelled" && new Date(a.appointment_date) >= new Date(new Date().toDateString()));
+      document.getElementById("myStatNext").textContent = upcoming ? upcoming.appointment_date : "—";
+
+      const tbody = document.getElementById("myApptTableBody");
+      if (appts.length === 0) {
+        document.getElementById("myApptEmpty").classList.remove("hidden");
+      } else {
+        tbody.innerHTML = appts.map(a => `
+          <tr>
             <td>${escapeHtml(a.department || "—")}</td>
             <td>${a.appointment_date || "—"}</td>
             <td>${escapeHtml(a.appointment_time || "—")}</td>
@@ -331,43 +474,7 @@
         `).join("");
       }
     } catch (err) {
-      // Non-fatal: patient stats above still loaded fine, just note this panel failed
-      document.getElementById("apptEmpty").textContent = "Couldn't load appointments right now.";
-      document.getElementById("apptEmpty").classList.remove("hidden");
-    }
-  }
-
-  async function loadUserAppointments(userId) {
-    const statusEl = document.getElementById("myApptStatus");
-    try {
-      const { data, error } = await window.supabaseClient
-        .from("appointments")
-        .select("id, appointment_date, status")
-        .eq("user_id", userId)
-        .order("appointment_date", { ascending: true });
-      if (error) throw error;
-      statusEl.textContent = data.length > 0
-        ? `${data.length} appointment${data.length === 1 ? "" : "s"} booked`
-        : "No appointments booked yet";
-    } catch (err) {
-      statusEl.textContent = "Couldn't check your appointments right now.";
-    }
-  }
-
-  async function loadUserData(userId, email) {
-    const statusEl = document.getElementById("mySubmissionsStatus");
-    try {
-      const { data, error } = await window.supabaseClient
-        .from("patients")
-        .select("id, created_at")
-        .eq("email", email)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      statusEl.textContent = data.length > 0
-        ? `${data.length} record${data.length === 1 ? "" : "s"} on file`
-        : "No records submitted yet";
-    } catch (err) {
-      statusEl.textContent = "Couldn't check your records right now.";
+      showDashboardAlert("Couldn't load your records right now.");
     }
   }
 
@@ -384,14 +491,120 @@
     link.click();
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  document.getElementById("openSupabaseLink").href = "https://supabase.com/dashboard/project/YOUR-PROJECT-REF/editor";
+
+  // ---- Doctors (shared read, admin-managed) ----
+  async function loadDoctors() {
+    const grid = document.getElementById("doctorsGrid");
+    const empty = document.getElementById("doctorsEmpty");
+    try {
+      const { data, error } = await window.supabaseClient
+        .from("doctors")
+        .select("*")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+
+      if (data.length === 0) {
+        empty.classList.remove("hidden");
+        grid.innerHTML = "";
+        return;
+      }
+      empty.classList.add("hidden");
+
+      grid.innerHTML = data.map(doc => {
+        const initials = (doc.name || "?").split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+        const adminButtons = currentRole === "admin" ? `
+          <div class="doc-actions">
+            <button class="btn btn-ghost editDocBtn" data-id="${doc.id}" type="button">Edit</button>
+            <button class="btn btn-danger deleteDocBtn" data-id="${doc.id}" type="button">Delete</button>
+          </div>` : "";
+        return `
+          <div class="card doctor-card">
+            <div class="avatar">${escapeHtml(initials)}</div>
+            <h3>${escapeHtml(doc.name)}</h3>
+            <div class="dept">${escapeHtml(doc.department || doc.specialty || "")}</div>
+            ${doc.bio ? `<p class="bio">${escapeHtml(doc.bio)}</p>` : ""}
+            ${adminButtons}
+          </div>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".editDocBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const doc = data.find(d => d.id === btn.getAttribute("data-id"));
+          openDoctorForm(doc);
+        });
+      });
+      grid.querySelectorAll(".deleteDocBtn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Remove this doctor?")) return;
+          try {
+            const { error } = await window.supabaseClient.from("doctors").delete().eq("id", btn.getAttribute("data-id"));
+            if (error) throw error;
+            await loadDoctors();
+          } catch (err) {
+            showDashboardAlert("Couldn't remove that doctor right now.");
+          }
+        });
+      });
+    } catch (err) {
+      empty.textContent = "Couldn't load doctors right now.";
+      empty.classList.remove("hidden");
+    }
   }
 
-  // Point admins to the Supabase project dashboard (fill in your project ref)
-  document.getElementById("openSupabaseLink").href = "https://supabase.com/dashboard/project/YOUR-PROJECT-REF/editor";
+  const addDoctorForm = document.getElementById("addDoctorForm");
+  const addDoctorToggle = document.getElementById("addDoctorToggle");
+  addDoctorToggle.addEventListener("click", () => {
+    if (addDoctorForm.classList.contains("open")) {
+      closeDoctorForm();
+    } else {
+      openDoctorForm(null);
+    }
+  });
+  document.getElementById("cancelDoctorForm").addEventListener("click", closeDoctorForm);
+
+  function openDoctorForm(doc) {
+    document.getElementById("docEditId").value = doc ? doc.id : "";
+    document.getElementById("docName").value = doc ? doc.name || "" : "";
+    document.getElementById("docDept").value = doc ? doc.department || "" : "";
+    document.getElementById("docSpecialty").value = doc ? doc.specialty || "" : "";
+    document.getElementById("docBio").value = doc ? doc.bio || "" : "";
+    addDoctorForm.classList.add("open");
+    addDoctorForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  function closeDoctorForm() {
+    addDoctorForm.classList.remove("open");
+    addDoctorForm.reset();
+  }
+
+  addDoctorForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("docEditId").value;
+    const record = {
+      name: document.getElementById("docName").value.trim(),
+      department: document.getElementById("docDept").value.trim(),
+      specialty: document.getElementById("docSpecialty").value.trim(),
+      bio: document.getElementById("docBio").value.trim(),
+    };
+    const btn = document.getElementById("saveDoctorBtn");
+    btn.disabled = true;
+    try {
+      let error;
+      if (id) {
+        ({ error } = await window.supabaseClient.from("doctors").update(record).eq("id", id));
+      } else {
+        ({ error } = await window.supabaseClient.from("doctors").insert([record]));
+      }
+      if (error) throw error;
+      closeDoctorForm();
+      await loadDoctors();
+    } catch (err) {
+      showDashboardAlert("Couldn't save that doctor. Please try again.");
+    } finally {
+      btn.disabled = false;
+    }
+  });
 </script>
 </body>
 </html>
