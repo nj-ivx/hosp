@@ -8,17 +8,31 @@
 <style>
   #app { display: none; }
   .loading-screen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--ink-muted);
-    font-size: 14px;
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; color: var(--ink-muted); font-size: 14px;
   }
-  .hero { padding: 40px 0 28px; }
+  .hero { padding: 40px 0 8px; }
   .hero h1 { font-size: 26px; margin-bottom: 6px; }
+
+  /* Overview */
+  .overview-panel {
+    padding: 28px;
+    margin: 24px 0 32px;
+    display: grid;
+    grid-template-columns: 1.1fr 2fr;
+    gap: 28px;
+    align-items: center;
+  }
+  @media (max-width: 800px) { .overview-panel { grid-template-columns: 1fr; } }
+  .overview-panel h2 { font-size: 19px; margin-bottom: 8px; }
+  .overview-panel p { font-size: 13.5px; color: var(--ink-muted); margin: 0; }
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 800px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-item { padding: 14px; border-radius: var(--radius-sm); background: var(--primary-soft); }
+  .feature-item .f-icon { font-size: 18px; margin-bottom: 6px; display: block; }
+  .feature-item h4 { font-size: 13px; margin: 0 0 3px; color: var(--primary); }
+  .feature-item p { font-size: 12px; margin: 0; color: var(--ink-muted); }
+
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
   .stat-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 800px) { .stat-grid, .stat-grid.cols-3 { grid-template-columns: repeat(2, 1fr); } }
@@ -40,30 +54,27 @@
   .panel-head { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .panel-head h2 { font-size: 17px; }
 
-  /* Logo */
   .brand-logo { display: inline-flex; }
   .brand-logo svg { display: block; }
 
-  /* Doctors */
-  .doctor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  @media (max-width: 800px) { .doctor-grid { grid-template-columns: 1fr; } }
-  .doctor-card { padding: 18px; }
-  .doctor-card .avatar {
+  .doctor-grid, .hospital-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 800px) { .doctor-grid, .hospital-grid { grid-template-columns: 1fr; } }
+  .doctor-card, .hospital-card { padding: 18px; }
+  .doctor-card .avatar, .hospital-card .avatar {
     width: 44px; height: 44px; border-radius: 50%;
     background: var(--primary-soft); color: var(--primary);
     display: flex; align-items: center; justify-content: center;
     font-family: var(--font-display); font-weight: 700; font-size: 16px;
     margin-bottom: 10px;
   }
-  .doctor-card h3 { font-size: 15px; margin-bottom: 2px; }
-  .doctor-card .dept { font-size: 12.5px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
-  .doctor-card p.bio { font-size: 13px; color: var(--ink-muted); margin: 0 0 12px; }
-  .doctor-card .doc-actions { display: flex; gap: 8px; }
-  .doctor-card .doc-actions button { font-size: 12px; padding: 5px 10px; }
-  #addDoctorForm { display: none; margin-top: 16px; padding: 20px; }
-  #addDoctorForm.open { display: block; }
+  .doctor-card h3, .hospital-card h3 { font-size: 15px; margin-bottom: 2px; }
+  .doctor-card .dept, .hospital-card .addr { font-size: 12.5px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
+  .doctor-card p.bio, .hospital-card p.desc { font-size: 13px; color: var(--ink-muted); margin: 0 0 12px; }
+  .doctor-card .doc-actions, .hospital-card .doc-actions { display: flex; gap: 8px; }
+  .doctor-card .doc-actions button, .hospital-card .doc-actions button { font-size: 12px; padding: 5px 10px; }
+  #addDoctorForm, #addHospitalForm { display: none; margin-top: 16px; padding: 20px; }
+  #addDoctorForm.open, #addHospitalForm.open { display: block; }
 
-  /* Appointment management */
   .appt-actions { display: flex; gap: 6px; align-items: center; }
   .appt-actions select { font-size: 12.5px; padding: 6px 8px; width: auto; }
   .appt-actions button { font-size: 12px; padding: 6px 10px; }
@@ -86,12 +97,9 @@
             <svg width="26" height="26" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
               <rect width="28" height="28" rx="8" fill="url(#logoGrad1)"/>
               <path d="M14 7v14M7 14h14" stroke="white" stroke-width="3" stroke-linecap="round"/>
-              <defs>
-                <linearGradient id="logoGrad1" x1="0" y1="0" x2="28" y2="28">
-                  <stop stop-color="#0B5D66"/>
-                  <stop offset="1" stop-color="#2FBFA0"/>
-                </linearGradient>
-              </defs>
+              <defs><linearGradient id="logoGrad1" x1="0" y1="0" x2="28" y2="28">
+                <stop stop-color="#0B5D66"/><stop offset="1" stop-color="#2FBFA0"/>
+              </linearGradient></defs>
             </svg>
           </span>
           <span data-i18n="brand">Feras Company Medical Portal</span>
@@ -116,6 +124,31 @@
         <h1 id="greeting">Welcome back</h1>
         <p class="muted" id="subGreeting">Here's what's happening today.</p>
       </div>
+
+      <!-- ==== OVERVIEW (shared) ==== -->
+      <section class="card-float overview-panel">
+        <div>
+          <h2 data-i18n="overview_title">About this portal</h2>
+          <p data-i18n="overview_desc">A secure place to manage patient records, book appointments, and connect with our hospitals and doctors.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="f-icon">🗂️</span>
+            <h4 data-i18n="feature1_title">Digital Records</h4>
+            <p data-i18n="feature1_desc">Submit and manage patient health records securely.</p>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">📅</span>
+            <h4 data-i18n="feature2_title">Easy Booking</h4>
+            <p data-i18n="feature2_desc">Book appointments with our doctors in minutes.</p>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">🏥</span>
+            <h4 data-i18n="feature3_title">Multiple Hospitals</h4>
+            <p data-i18n="feature3_desc">Access care across all our hospital locations.</p>
+          </div>
+        </div>
+      </section>
 
       <!-- ==== ADMIN VIEW ==== -->
       <div id="adminView" class="hidden">
@@ -165,7 +198,7 @@
           <div class="card" style="padding: 8px 0; overflow-x:auto;">
             <table id="apptTable">
               <thead>
-                <tr><th data-i18n="th_patient">Patient</th><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th><th data-i18n="th_manage">Manage</th></tr>
+                <tr><th data-i18n="th_patient">Patient</th><th data-i18n="th_hospital">Hospital</th><th data-i18n="th_doctor">Doctor</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th><th data-i18n="th_manage">Manage</th></tr>
               </thead>
               <tbody id="apptTableBody"></tbody>
             </table>
@@ -202,7 +235,7 @@
           <div class="card" style="padding: 8px 0; overflow-x:auto;">
             <table id="myApptTable">
               <thead>
-                <tr><th data-i18n="th_department">Department</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th></tr>
+                <tr><th data-i18n="th_hospital">Hospital</th><th data-i18n="th_doctor">Doctor</th><th data-i18n="th_date">Date</th><th data-i18n="th_time">Time</th><th data-i18n="th_status">Status</th></tr>
               </thead>
               <tbody id="myApptTableBody"></tbody>
             </table>
@@ -210,6 +243,43 @@
           </div>
         </section>
       </div>
+
+      <!-- ==== OUR HOSPITALS (shared) ==== -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2 data-i18n="hospitals_title">Our Hospitals</h2>
+          <button class="btn btn-ghost hidden" id="addHospitalToggle" data-i18n="add_hospital">Add Hospital</button>
+        </div>
+
+        <form id="addHospitalForm" class="card">
+          <div class="grid-2">
+            <div class="field">
+              <label for="hospName" data-i18n="hospital_name">Name</label>
+              <input type="text" id="hospName" required>
+            </div>
+            <div class="field">
+              <label for="hospPhone" data-i18n="hospital_phone">Phone</label>
+              <input type="text" id="hospPhone">
+            </div>
+          </div>
+          <div class="field">
+            <label for="hospAddress" data-i18n="hospital_address">Address</label>
+            <input type="text" id="hospAddress">
+          </div>
+          <div class="field">
+            <label for="hospDesc" data-i18n="hospital_description">Description</label>
+            <textarea id="hospDesc" rows="2"></textarea>
+          </div>
+          <input type="hidden" id="hospEditId" value="">
+          <div class="row" style="justify-content:flex-end; gap:10px;">
+            <button type="button" class="btn btn-ghost" id="cancelHospitalForm" data-i18n="btn_cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveHospitalBtn" data-i18n="save">Save</button>
+          </div>
+        </form>
+
+        <div class="hospital-grid" id="hospitalsGrid" style="margin-top:16px;"></div>
+        <div id="hospitalsEmpty" class="empty-state hidden" data-i18n="no_hospitals">No hospitals listed yet.</div>
+      </section>
 
       <!-- ==== OUR DOCTORS (shared) ==== -->
       <section class="panel">
@@ -225,13 +295,21 @@
               <input type="text" id="docName" required>
             </div>
             <div class="field">
+              <label for="docHospital" data-i18n="label_hospital">Hospital</label>
+              <select id="docHospital">
+                <option value="" data-i18n="select_option">Select…</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
               <label for="docDept" data-i18n="doctor_department">Department</label>
               <input type="text" id="docDept">
             </div>
-          </div>
-          <div class="field">
-            <label for="docSpecialty" data-i18n="doctor_specialty">Specialty</label>
-            <input type="text" id="docSpecialty">
+            <div class="field">
+              <label for="docSpecialty" data-i18n="doctor_specialty">Specialty</label>
+              <input type="text" id="docSpecialty">
+            </div>
           </div>
           <div class="field">
             <label for="docBio" data-i18n="doctor_bio">Short bio</label>
@@ -286,6 +364,7 @@
 
   let currentRole = null;
   let currentUserId = null;
+  let hospitalsCache = [];
 
   (async function init() {
     if (!window.supabaseClient) {
@@ -323,8 +402,8 @@
         document.getElementById("subGreeting").textContent = dict.sub_admin;
         document.getElementById("adminView").classList.remove("hidden");
         document.getElementById("addDoctorToggle").classList.remove("hidden");
+        document.getElementById("addHospitalToggle").classList.remove("hidden");
         await loadAdminData();
-        await loadAdminAppointments();
       } else if (role === "user") {
         document.getElementById("roleBadge").textContent = dict.badge_patient;
         document.getElementById("subGreeting").textContent = dict.sub_patient;
@@ -334,6 +413,8 @@
         showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
       }
 
+      await loadHospitals();
+      if (role === "admin") await loadAdminAppointments();
       await loadDoctors();
     } catch (err) {
       console.error("[dashboard] init failed:", err);
@@ -399,10 +480,11 @@
         tbody.innerHTML = data.map(a => `
           <tr data-id="${a.id}">
             <td>${escapeHtml(a.patient_name || "")}<br><span class="muted" style="font-size:12px;">${escapeHtml(a.patient_email || "")}</span></td>
-            <td>${escapeHtml(a.department || "—")}</td>
+            <td>${escapeHtml(a.hospital_name || "—")}</td>
+            <td>${escapeHtml(a.doctor_name || "—")}</td>
             <td>${a.appointment_date || "—"}</td>
             <td>${escapeHtml(a.appointment_time || "—")}</td>
-            <td><span class="badge ${a.status === 'confirmed' ? 'badge-user' : (a.status === 'cancelled' ? 'badge-admin' : 'badge-admin')}">${escapeHtml(a.status || "pending")}</span></td>
+            <td><span class="badge ${a.status === 'confirmed' ? 'badge-user' : 'badge-admin'}">${escapeHtml(a.status || "pending")}</span></td>
             <td>
               <div class="appt-actions">
                 <select class="apptStatusSelect">
@@ -466,7 +548,8 @@
       } else {
         tbody.innerHTML = appts.map(a => `
           <tr>
-            <td>${escapeHtml(a.department || "—")}</td>
+            <td>${escapeHtml(a.hospital_name || "—")}</td>
+            <td>${escapeHtml(a.doctor_name || "—")}</td>
             <td>${a.appointment_date || "—"}</td>
             <td>${escapeHtml(a.appointment_time || "—")}</td>
             <td><span class="badge ${a.status === 'confirmed' ? 'badge-user' : 'badge-admin'}">${escapeHtml(a.status || "pending")}</span></td>
@@ -493,15 +576,122 @@
 
   document.getElementById("openSupabaseLink").href = "https://supabase.com/dashboard/project/YOUR-PROJECT-REF/editor";
 
-  // ---- Doctors (shared read, admin-managed) ----
+  // ---- Hospitals ----
+  async function loadHospitals() {
+    const grid = document.getElementById("hospitalsGrid");
+    const empty = document.getElementById("hospitalsEmpty");
+    try {
+      const { data, error } = await window.supabaseClient.from("hospitals").select("*").order("created_at", { ascending: true });
+      if (error) throw error;
+      hospitalsCache = data || [];
+
+      const hospSelect = document.getElementById("docHospital");
+      hospSelect.innerHTML = '<option value="">Select…</option>' +
+        hospitalsCache.map(h => `<option value="${h.id}">${escapeHtml(h.name)}</option>`).join("");
+
+      if (data.length === 0) {
+        empty.classList.remove("hidden");
+        grid.innerHTML = "";
+        return;
+      }
+      empty.classList.add("hidden");
+
+      grid.innerHTML = data.map(h => {
+        const initials = (h.name || "?").split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+        const adminButtons = currentRole === "admin" ? `
+          <div class="doc-actions">
+            <button class="btn btn-ghost editHospBtn" data-id="${h.id}" type="button">Edit</button>
+            <button class="btn btn-danger deleteHospBtn" data-id="${h.id}" type="button">Delete</button>
+          </div>` : "";
+        return `
+          <div class="card hospital-card">
+            <div class="avatar">${escapeHtml(initials)}</div>
+            <h3>${escapeHtml(h.name)}</h3>
+            ${h.address ? `<div class="addr">${escapeHtml(h.address)}</div>` : ""}
+            ${h.description ? `<p class="desc">${escapeHtml(h.description)}</p>` : ""}
+            ${h.phone ? `<p class="desc">${escapeHtml(h.phone)}</p>` : ""}
+            ${adminButtons}
+          </div>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".editHospBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const h = data.find(x => x.id === btn.getAttribute("data-id"));
+          openHospitalForm(h);
+        });
+      });
+      grid.querySelectorAll(".deleteHospBtn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Remove this hospital?")) return;
+          try {
+            const { error } = await window.supabaseClient.from("hospitals").delete().eq("id", btn.getAttribute("data-id"));
+            if (error) throw error;
+            await loadHospitals();
+          } catch (err) {
+            showDashboardAlert("Couldn't remove that hospital right now.");
+          }
+        });
+      });
+    } catch (err) {
+      empty.textContent = "Couldn't load hospitals right now.";
+      empty.classList.remove("hidden");
+    }
+  }
+
+  const addHospitalForm = document.getElementById("addHospitalForm");
+  const addHospitalToggle = document.getElementById("addHospitalToggle");
+  addHospitalToggle.addEventListener("click", () => {
+    if (addHospitalForm.classList.contains("open")) closeHospitalForm();
+    else openHospitalForm(null);
+  });
+  document.getElementById("cancelHospitalForm").addEventListener("click", closeHospitalForm);
+
+  function openHospitalForm(h) {
+    document.getElementById("hospEditId").value = h ? h.id : "";
+    document.getElementById("hospName").value = h ? h.name || "" : "";
+    document.getElementById("hospPhone").value = h ? h.phone || "" : "";
+    document.getElementById("hospAddress").value = h ? h.address || "" : "";
+    document.getElementById("hospDesc").value = h ? h.description || "" : "";
+    addHospitalForm.classList.add("open");
+    addHospitalForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  function closeHospitalForm() {
+    addHospitalForm.classList.remove("open");
+    addHospitalForm.reset();
+  }
+
+  addHospitalForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("hospEditId").value;
+    const record = {
+      name: document.getElementById("hospName").value.trim(),
+      phone: document.getElementById("hospPhone").value.trim(),
+      address: document.getElementById("hospAddress").value.trim(),
+      description: document.getElementById("hospDesc").value.trim(),
+    };
+    const btn = document.getElementById("saveHospitalBtn");
+    btn.disabled = true;
+    try {
+      let error;
+      if (id) ({ error } = await window.supabaseClient.from("hospitals").update(record).eq("id", id));
+      else ({ error } = await window.supabaseClient.from("hospitals").insert([record]));
+      if (error) throw error;
+      closeHospitalForm();
+      await loadHospitals();
+    } catch (err) {
+      showDashboardAlert("Couldn't save that hospital. Please try again.");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // ---- Doctors ----
   async function loadDoctors() {
     const grid = document.getElementById("doctorsGrid");
     const empty = document.getElementById("doctorsEmpty");
     try {
-      const { data, error } = await window.supabaseClient
-        .from("doctors")
-        .select("*")
-        .order("created_at", { ascending: true });
+      const { data, error } = await window.supabaseClient.from("doctors").select("*").order("created_at", { ascending: true });
       if (error) throw error;
 
       if (data.length === 0) {
@@ -513,6 +703,7 @@
 
       grid.innerHTML = data.map(doc => {
         const initials = (doc.name || "?").split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+        const hospital = hospitalsCache.find(h => h.id === doc.hospital_id);
         const adminButtons = currentRole === "admin" ? `
           <div class="doc-actions">
             <button class="btn btn-ghost editDocBtn" data-id="${doc.id}" type="button">Edit</button>
@@ -523,6 +714,7 @@
             <div class="avatar">${escapeHtml(initials)}</div>
             <h3>${escapeHtml(doc.name)}</h3>
             <div class="dept">${escapeHtml(doc.department || doc.specialty || "")}</div>
+            ${hospital ? `<p class="bio" style="font-weight:600; color:var(--ink);">${escapeHtml(hospital.name)}</p>` : ""}
             ${doc.bio ? `<p class="bio">${escapeHtml(doc.bio)}</p>` : ""}
             ${adminButtons}
           </div>
@@ -556,17 +748,15 @@
   const addDoctorForm = document.getElementById("addDoctorForm");
   const addDoctorToggle = document.getElementById("addDoctorToggle");
   addDoctorToggle.addEventListener("click", () => {
-    if (addDoctorForm.classList.contains("open")) {
-      closeDoctorForm();
-    } else {
-      openDoctorForm(null);
-    }
+    if (addDoctorForm.classList.contains("open")) closeDoctorForm();
+    else openDoctorForm(null);
   });
   document.getElementById("cancelDoctorForm").addEventListener("click", closeDoctorForm);
 
   function openDoctorForm(doc) {
     document.getElementById("docEditId").value = doc ? doc.id : "";
     document.getElementById("docName").value = doc ? doc.name || "" : "";
+    document.getElementById("docHospital").value = doc ? doc.hospital_id || "" : "";
     document.getElementById("docDept").value = doc ? doc.department || "" : "";
     document.getElementById("docSpecialty").value = doc ? doc.specialty || "" : "";
     document.getElementById("docBio").value = doc ? doc.bio || "" : "";
@@ -583,6 +773,7 @@
     const id = document.getElementById("docEditId").value;
     const record = {
       name: document.getElementById("docName").value.trim(),
+      hospital_id: document.getElementById("docHospital").value || null,
       department: document.getElementById("docDept").value.trim(),
       specialty: document.getElementById("docSpecialty").value.trim(),
       bio: document.getElementById("docBio").value.trim(),
@@ -591,11 +782,8 @@
     btn.disabled = true;
     try {
       let error;
-      if (id) {
-        ({ error } = await window.supabaseClient.from("doctors").update(record).eq("id", id));
-      } else {
-        ({ error } = await window.supabaseClient.from("doctors").insert([record]));
-      }
+      if (id) ({ error } = await window.supabaseClient.from("doctors").update(record).eq("id", id));
+      else ({ error } = await window.supabaseClient.from("doctors").insert([record]));
       if (error) throw error;
       closeDoctorForm();
       await loadDoctors();

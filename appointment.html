@@ -11,13 +11,10 @@
   .form-head h1 { font-size: 24px; margin-bottom: 6px; }
   .back-link { font-size: 13px; text-decoration: none; color: var(--ink-muted); }
   .back-link:hover { color: var(--primary); }
-  .success-screen {
-    display: none;
-    text-align: center;
-    padding: 60px 24px;
-  }
+  .success-screen { display: none; text-align: center; padding: 60px 24px; }
   .success-screen .icon { font-size: 40px; margin-bottom: 12px; display: block; }
   .card-form { padding: 28px; max-width: 560px; margin: 0 auto; }
+  select:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -54,7 +51,7 @@
     <div id="formWrap">
       <div class="form-head center">
         <h1 data-i18n="appt_title">Book an Appointment</h1>
-        <p class="muted" data-i18n="appt_sub">Pick a department and a time that works for you.</p>
+        <p class="muted" data-i18n="appt_sub">Pick a hospital, a doctor, and a time that works for you.</p>
       </div>
 
       <div id="formAlert" class="alert alert-error" hidden role="alert"></div>
@@ -69,15 +66,15 @@
           <input type="email" id="patient_email" name="patient_email" required>
         </div>
         <div class="field">
-          <label for="department" data-i18n="label_department">Department *</label>
-          <select id="department" name="department" required>
-            <option value="">Select…</option>
-            <option>General Medicine</option>
-            <option>Cardiology</option>
-            <option>Pediatrics</option>
-            <option>Dermatology</option>
-            <option>Orthopedics</option>
-            <option>Dentistry</option>
+          <label for="hospitalSelect" data-i18n="label_hospital">Hospital *</label>
+          <select id="hospitalSelect" required>
+            <option value="" data-i18n="select_option">Select…</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="doctorSelect" data-i18n="label_doctor">Doctor *</label>
+          <select id="doctorSelect" required disabled>
+            <option value="" data-i18n="select_hospital_first">Choose a hospital first…</option>
           </select>
         </div>
         <div class="grid-2">
@@ -131,6 +128,11 @@
   });
 
   let currentUserId = null;
+  let hospitals = [];
+  let doctors = [];
+
+  const hospitalSelect = document.getElementById("hospitalSelect");
+  const doctorSelect = document.getElementById("doctorSelect");
 
   (async () => {
     if (!window.supabaseClient) return;
@@ -138,7 +140,50 @@
     if (!session) return;
     currentUserId = session.user.id;
     document.getElementById("patient_email").value = session.user.email || "";
+    await loadHospitalsAndDoctors();
   })();
+
+  async function loadHospitalsAndDoctors() {
+    try {
+      const [{ data: hData, error: hErr }, { data: dData, error: dErr }] = await Promise.all([
+        window.supabaseClient.from("hospitals").select("*").order("name"),
+        window.supabaseClient.from("doctors").select("*").order("name"),
+      ]);
+      if (hErr) throw hErr;
+      if (dErr) throw dErr;
+      hospitals = hData || [];
+      doctors = dData || [];
+
+      hospitalSelect.innerHTML = '<option value="">Select…</option>' +
+        hospitals.map(h => `<option value="${h.id}">${escapeHtml(h.name)}</option>`).join("");
+    } catch (err) {
+      showAlert("Couldn't load hospitals and doctors right now. Please refresh the page.");
+    }
+  }
+
+  hospitalSelect.addEventListener("change", () => {
+    const hospitalId = hospitalSelect.value;
+    const matching = doctors.filter(d => d.hospital_id === hospitalId);
+    if (!hospitalId) {
+      doctorSelect.innerHTML = '<option value="">Choose a hospital first…</option>';
+      doctorSelect.disabled = true;
+      return;
+    }
+    if (matching.length === 0) {
+      doctorSelect.innerHTML = '<option value="">No doctors listed at this hospital yet</option>';
+      doctorSelect.disabled = true;
+      return;
+    }
+    doctorSelect.disabled = false;
+    doctorSelect.innerHTML = '<option value="">Select…</option>' +
+      matching.map(d => `<option value="${d.id}">${escapeHtml(d.name)}${d.specialty ? " — " + escapeHtml(d.specialty) : ""}</option>`).join("");
+  });
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
 
   const formAlert = document.getElementById("formAlert");
   function showAlert(msg) { formAlert.textContent = msg; formAlert.hidden = false; }
@@ -156,10 +201,22 @@
       return;
     }
 
+    const hospital = hospitals.find(h => h.id === hospitalSelect.value);
+    const doctor = doctors.find(d => d.id === doctorSelect.value);
+    if (!hospital || !doctor) {
+      showAlert("Please choose both a hospital and a doctor.");
+      return;
+    }
+
     const formData = new FormData(form);
     const record = Object.fromEntries(formData.entries());
     record.user_id = currentUserId;
     record.status = "pending";
+    record.hospital_id = hospital.id;
+    record.hospital_name = hospital.name;
+    record.doctor_id = doctor.id;
+    record.doctor_name = doctor.name;
+    record.department = doctor.department || doctor.specialty || "";
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Booking…";
@@ -181,6 +238,8 @@
   document.getElementById("bookAnotherBtn").addEventListener("click", () => {
     form.reset();
     document.getElementById("patient_email").value = "";
+    doctorSelect.innerHTML = '<option value="">Choose a hospital first…</option>';
+    doctorSelect.disabled = true;
     document.getElementById("successScreen").style.display = "none";
     document.getElementById("formWrap").style.display = "block";
   });
