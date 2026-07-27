@@ -219,41 +219,52 @@
       return;
     }
 
-    const session = await window.requireSession("auth.html");
-    if (!session) return; // requireSession already redirects
-
-    const email = session.user.email || "";
-    const dict = window.I18N[localStorage.getItem("lang") || "en"];
-    document.getElementById("greeting").textContent =
-      `${dict.greeting_default}${email ? ", " + email.split("@")[0] : ""}`;
-
-    let role;
     try {
-      role = await window.getUserRole();
+      const session = await window.requireSession("auth.html");
+      if (!session) return; // requireSession already redirects
+
+      const email = session.user.email || "";
+      const lang = localStorage.getItem("lang") || "en";
+      const dict = (window.I18N && window.I18N[lang]) || {
+        greeting_default: "Welcome back",
+        badge_admin: "Administrator",
+        badge_patient: "Patient",
+        sub_admin: "System overview and patient records.",
+        sub_patient: "Manage your health record submissions.",
+      };
+      document.getElementById("greeting").textContent =
+        `${dict.greeting_default}${email ? ", " + email.split("@")[0] : ""}`;
+
+      let role;
+      try {
+        role = await window.getUserRole();
+      } catch (err) {
+        showDashboardAlert("Couldn't verify your account permissions. Please try refreshing.");
+        return;
+      }
+
+      if (role === "admin") {
+        document.getElementById("roleBadge").textContent = dict.badge_admin;
+        document.getElementById("roleBadge").className = "badge badge-admin";
+        document.getElementById("subGreeting").textContent = dict.sub_admin;
+        document.getElementById("adminView").classList.remove("hidden");
+        await loadAdminData();
+        await loadAdminAppointments();
+      } else if (role === "user") {
+        document.getElementById("roleBadge").textContent = dict.badge_patient;
+        document.getElementById("subGreeting").textContent = dict.sub_patient;
+        document.getElementById("userView").classList.remove("hidden");
+        await loadUserData(session.user.id, session.user.email);
+        await loadUserAppointments(session.user.id);
+      } else {
+        showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
+      }
     } catch (err) {
-      showDashboardAlert("Couldn't verify your account permissions. Please try refreshing.");
+      console.error("[dashboard] init failed:", err);
+      showDashboardAlert("Something went wrong loading the dashboard. Please refresh the page.");
+    } finally {
       revealApp();
-      return;
     }
-
-    if (role === "admin") {
-      document.getElementById("roleBadge").textContent = dict.badge_admin;
-      document.getElementById("roleBadge").className = "badge badge-admin";
-      document.getElementById("subGreeting").textContent = dict.sub_admin;
-      document.getElementById("adminView").classList.remove("hidden");
-      await loadAdminData();
-      await loadAdminAppointments();
-    } else if (role === "user") {
-      document.getElementById("roleBadge").textContent = dict.badge_patient;
-      document.getElementById("subGreeting").textContent = dict.sub_patient;
-      document.getElementById("userView").classList.remove("hidden");
-      await loadUserData(session.user.id, session.user.email);
-      await loadUserAppointments(session.user.id);
-    } else {
-      showDashboardAlert("No access role is set up for this account yet. Contact an administrator.");
-    }
-
-    revealApp();
   })();
 
   async function loadAdminData() {
