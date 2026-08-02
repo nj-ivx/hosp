@@ -1,21 +1,6 @@
-/* ==========================================================================
-   i18n.js
-   Lightweight EN/AR language switcher. No frameworks — walks elements
-   tagged with data-i18n / data-i18n-placeholder and swaps text based on
-   the dictionary below. Persists choice in localStorage like the theme
-   toggle, and flips <html dir> for RTL layout.
-
-   Usage in HTML:
-     <h1 data-i18n="welcome">Welcome</h1>
-     <input data-i18n-placeholder="search_ph">
-     <button class="lang-toggle" id="langToggle">EN / AR</button>
-
-   Load order on every page:
-     <script src="supabaseClient.js"></script>
-     <script src="i18n.js"></script>
-   ========================================================================== */
-
-window.I18N = {
+// Dictionary + language helpers, ported from the vanilla i18n.js.
+export const I18N =
+{
   en: {
     brand: "Feras Company Medical Portal",
     logout: "Log Out",
@@ -270,39 +255,12 @@ window.I18N = {
   },
 };
 
-(function () {
-  function currentLang() {
-    return localStorage.getItem("lang") || "en";
-  }
+export const LANG_KEY = 'lang'
 
-  function applyLang(lang) {
-    const dict = window.I18N[lang] || window.I18N.en;
-    document.documentElement.setAttribute("lang", lang);
-    document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+export function getStoredLang() {
+  return localStorage.getItem(LANG_KEY) || 'en'
+}
 
-    document.querySelectorAll("[data-i18n]").forEach((el) => {
-      const key = el.getAttribute("data-i18n");
-      if (dict[key]) el.textContent = dict[key];
-    });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-      const key = el.getAttribute("data-i18n-placeholder");
-      if (dict[key]) el.setAttribute("placeholder", dict[key]);
-    });
-
-    const toggle = document.getElementById("langToggle");
-    if (toggle) toggle.textContent = lang === "ar" ? "EN" : "AR";
-
-    localStorage.setItem("lang", lang);
-  }
-
-  window.applyLang = applyLang;
-  window.toggleLang = function toggleLang() {
-    applyLang(currentLang() === "ar" ? "en" : "ar");
-  };
-
-  document.addEventListener("DOMContentLoaded", () => {
-    applyLang(currentLang());
-    const toggle = document.getElementById("langToggle");
-    if (toggle) toggle.addEventListener("click", window.toggleLang);
-  });
-})();
+export function setStoredLang(lang) {
+  localStorage.setItem(LANG_KEY, lang)
+}

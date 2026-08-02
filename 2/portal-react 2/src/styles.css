@@ -411,3 +411,151 @@ legend {
   padding: 48px 24px;
   color: var(--ink-muted);
 }
+
+/* ==========================================================================
+   Page-specific styles (ported from per-page <style> blocks in the
+   vanilla version) — consolidated here since React uses one global sheet.
+   ========================================================================== */
+
+.loading-screen {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; color: var(--ink-muted); font-size: 14px;
+}
+
+/* Auth page */
+.auth-shell { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.auth-card { width: 100%; max-width: 420px; padding: 36px; }
+.auth-head { text-align: center; margin-bottom: 24px; }
+.auth-head h1 { font-size: 22px; margin-bottom: 6px; }
+.tabs { display: flex; background: var(--primary-soft); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 24px; }
+.tab {
+  flex: 1; text-align: center; padding: 8px 0; font-size: 13.5px; font-weight: 600;
+  color: var(--ink-muted); border-radius: 6px; cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.tab.active { background: var(--bg-elevated); color: var(--primary); box-shadow: var(--shadow-sm); }
+.fine-print { font-size: 12px; text-align: center; margin-top: 18px; }
+
+/* Form pages (intake + appointment) */
+.form-shell { padding: 32px 0 60px; }
+.form-head { margin-bottom: 24px; }
+.form-head h1 { font-size: 24px; margin-bottom: 6px; }
+.back-link { font-size: 13px; text-decoration: none; color: var(--ink-muted); display: inline-block; }
+.back-link:hover { color: var(--primary); }
+.success-screen { text-align: center; padding: 60px 24px; }
+.success-screen .icon { font-size: 40px; margin-bottom: 12px; display: block; }
+.card-form { padding: 28px; max-width: 560px; margin: 0 auto; }
+select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Dashboard */
+.hero { padding: 40px 0 8px; }
+.hero h1 { font-size: 26px; margin-bottom: 6px; }
+
+.overview-panel {
+  padding: 28px; margin: 24px 0 32px;
+  display: grid; grid-template-columns: 1.1fr 2fr; gap: 28px; align-items: center;
+}
+@media (max-width: 800px) { .overview-panel { grid-template-columns: 1fr; } }
+.overview-panel h2 { font-size: 19px; margin-bottom: 8px; }
+.overview-panel p { font-size: 13.5px; color: var(--ink-muted); margin: 0; }
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 800px) { .feature-grid { grid-template-columns: 1fr; } }
+.feature-item { padding: 14px; border-radius: var(--radius-sm); background: var(--primary-soft); }
+.feature-item .f-icon { font-size: 18px; margin-bottom: 6px; display: block; }
+.feature-item h4 { font-size: 13px; margin: 0 0 3px; color: var(--primary); }
+.feature-item p { font-size: 12px; margin: 0; color: var(--ink-muted); }
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+.stat-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 800px) { .stat-grid, .stat-grid.cols-3 { grid-template-columns: repeat(2, 1fr); } }
+.stat-card { padding: 20px; }
+.stat-card .value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--primary); }
+.stat-card .label { font-size: 12.5px; color: var(--ink-muted); margin-top: 4px; }
+
+.action-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 800px) { .action-grid { grid-template-columns: 1fr; } }
+.action-card { padding: 22px; cursor: pointer; transition: transform var(--transition), box-shadow var(--transition); }
+.action-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.action-card .icon { font-size: 22px; margin-bottom: 10px; display: block; transition: transform 220ms ease; }
+.action-card:hover .icon { transform: scale(1.2) rotate(-4deg); }
+.action-card h3 { font-size: 15.5px; margin-bottom: 4px; }
+.action-card p { font-size: 13px; color: var(--ink-muted); margin: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+th { color: var(--ink-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; }
+section.panel { margin-bottom: 32px; }
+.panel-head { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.panel-head h2 { font-size: 17px; }
+
+.brand-logo { display: inline-flex; }
+.brand-logo svg { display: block; }
+
+.doctor-grid, .hospital-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 800px) { .doctor-grid, .hospital-grid { grid-template-columns: 1fr; } }
+.doctor-card, .hospital-card { padding: 18px; }
+.doctor-card .avatar, .hospital-card .avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--primary-soft); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 16px;
+  margin-bottom: 10px;
+}
+.doctor-card h3, .hospital-card h3 { font-size: 15px; margin-bottom: 2px; }
+.doctor-card .dept, .hospital-card .addr { font-size: 12.5px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
+.doctor-card p.bio, .hospital-card p.desc { font-size: 13px; color: var(--ink-muted); margin: 0 0 12px; }
+.doctor-card .doc-actions, .hospital-card .doc-actions { display: flex; gap: 8px; }
+.doctor-card .doc-actions button, .hospital-card .doc-actions button { font-size: 12px; padding: 5px 10px; }
+
+.appt-actions { display: flex; gap: 6px; align-items: center; }
+.appt-actions select { font-size: 12.5px; padding: 6px 8px; width: auto; }
+.appt-actions button { font-size: 12px; padding: 6px 10px; }
+
+/* ---- Toasts ---- */
+.toast-stack {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+[dir="rtl"] .toast-stack { right: auto; left: 20px; }
+.toast {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 220ms ease, toastOut 220ms ease 3000ms forwards;
+  max-width: 320px;
+}
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(-6px); } }
+
+/* ---- Skeletons ---- */
+.skeleton { background: linear-gradient(90deg, var(--border) 25%, var(--primary-soft) 50%, var(--border) 75%); background-size: 200% 100%; animation: skeletonShine 1.4s ease infinite; border-radius: var(--radius-sm); }
+@keyframes skeletonShine { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.skeleton-bar { height: 14px; margin-bottom: 8px; }
+.skeleton-card { height: 90px; border-radius: var(--radius-md); }
+
+/* ---- Landing page ---- */
+.landing-hero { text-align: center; padding: 60px 0 20px; }
+.landing-hero h1 { font-size: 32px; margin-bottom: 10px; }
+.landing-hero p { font-size: 15px; color: var(--ink-muted); max-width: 560px; margin: 0 auto 24px; }
+.landing-cta { display: flex; gap: 12px; justify-content: center; }
+
+/* ---- Search/filter bars ---- */
+.filter-bar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-bar input, .filter-bar select { max-width: 240px; }
+
+/* ---- Avatars with photo ---- */
+.avatar-photo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+
+/* ---- 404 ---- */
+.notfound { text-align: center; padding: 100px 24px; }
+.notfound h1 { font-size: 64px; color: var(--primary); margin-bottom: 8px; }
