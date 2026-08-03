@@ -19,6 +19,8 @@ export default function HospitalsSection({ isAdmin, onChange }) {
   const [address, setAddress] = useState('')
   const [description, setDescription] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
+  const [latitude, setLatitude] = useState('')
+  const [longitude, setLongitude] = useState('')
   const [saving, setSaving] = useState(false)
   const [search, setSearch] = useState('')
 
@@ -48,6 +50,8 @@ export default function HospitalsSection({ isAdmin, onChange }) {
     setAddress(h ? h.address || '' : '')
     setDescription(h ? h.description || '' : '')
     setPhotoUrl(h ? h.photo_url || '' : '')
+    setLatitude(h ? h.latitude ?? '' : '')
+    setLongitude(h ? h.longitude ?? '' : '')
     setFormOpen(true)
   }
   function closeForm() { setFormOpen(false) }
@@ -55,7 +59,11 @@ export default function HospitalsSection({ isAdmin, onChange }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
-    const record = { name, phone, address, description, photo_url: photoUrl }
+    const record = {
+      name, phone, address, description, photo_url: photoUrl,
+      latitude: latitude === '' ? null : Number(latitude),
+      longitude: longitude === '' ? null : Number(longitude),
+    }
     try {
       const { error } = editId
         ? await supabase.from('hospitals').update(record).eq('id', editId)
@@ -119,6 +127,16 @@ export default function HospitalsSection({ isAdmin, onChange }) {
           <div className="field">
             <label>Photo URL</label>
             <input value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} placeholder="https://…" />
+          </div>
+          <div className="grid-2">
+            <div className="field">
+              <label>Latitude</label>
+              <input type="number" step="any" value={latitude} onChange={(e) => setLatitude(e.target.value)} placeholder="e.g. 26.4207" />
+            </div>
+            <div className="field">
+              <label>Longitude</label>
+              <input type="number" step="any" value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="e.g. 50.0888" />
+            </div>
           </div>
           <div className="field">
             <label>{t.hospital_description}</label>

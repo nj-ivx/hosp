@@ -11,20 +11,22 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   },
 })
 
-/** Returns 'admin' | 'user' | null */
-export async function getUserRole() {
+/** Returns { role: 'admin'|'hospital'|'user'|null, hospitalId, patientKey } */
+export async function getRoleInfo() {
   const { data: { session } } = await supabase.auth.getSession()
-  if (!session) return null
+  if (!session) return { role: null, hospitalId: null, patientKey: null }
 
   const { data, error } = await supabase
     .from('user_roles')
-    .select('role')
+    .select('role, hospital_id, patient_key')
     .eq('user_id', session.user.id)
     .single()
 
   if (error) {
     console.error('[supabaseClient] role lookup failed:', error.message)
-    return null
+    return { role: null, hospitalId: null, patientKey: null }
   }
-  return data ? data.role : null
+  return data
+    ? { role: data.role, hospitalId: data.hospital_id, patientKey: data.patient_key }
+    : { role: null, hospitalId: null, patientKey: null }
 }

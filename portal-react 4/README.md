@@ -39,7 +39,7 @@ npm install
 npm run dev
 ```
 
-Opens at `http://localhost:5173/hosp-react/` (the `/hosp-react/` base path matches your
+Opens at `http://localhost:5173/hosp/` (the `/hosp/` base path matches your
 GitHub Pages URL — see `vite.config.js` if you ever move the repo).
 
 Supabase credentials are already filled in `src/lib/supabaseClient.js`.
@@ -101,12 +101,45 @@ or the row imports with no hospital assigned.
 
 ## Notes
 
-- Uses `HashRouter` (URLs look like `/hosp-react/#/book`) instead of `BrowserRouter`
+- Uses `HashRouter` (URLs look like `/hosp/#/book`) instead of `BrowserRouter`
   because GitHub Pages has no server-side rewrite rule — a real path like
-  `/hosp-react/book` would 404 on refresh. Hash routes always resolve to
+  `/hosp/book` would 404 on refresh. Hash routes always resolve to
   `index.html` first, then React Router takes over.
 - The Supabase `user_roles` row is created server-side by the Postgres
   trigger you already set up (`handle_new_user`) — no client-side insert
   needed on signup, same as the vanilla version's final fix.
 - RLS policies are unchanged — same `patients`, `user_roles`, `appointments`,
   `doctors`, `hospitals` tables and policies you already created.
+
+## New in the "connected hospitals" redesign
+
+- **Hospital accounts** — a third role (`hospital`, alongside `admin`/`user`).
+  A hospital account manages only its own doctors and can look up any
+  patient's records by their patient key. Create one by, in Supabase Table
+  Editor, setting a user's `user_roles.role` to `hospital` and their
+  `hospital_id` to the hospital they staff (same manual-promotion pattern
+  you already used to make yourself an admin).
+- **Patient key** — every patient account gets a unique code (visible on
+  their dashboard) they hand to hospital staff to pull up their records.
+  Hospital/admin staff resolve a key to a patient via a Postgres function
+  (`lookup_patient_by_key`) rather than browsing the raw accounts table.
+- **Visit notes** — hospital staff can attach a diagnosis/treatment/notes
+  entry to any of a patient's appointments; the patient sees this in their
+  own appointment history ("What was done").
+- **Find Nearest Specialist** (`/nearest`) — browser geolocation + a
+  specialty search, sorted by distance to each hospital (haversine formula,
+  client-side). Hospitals need `latitude`/`longitude` set (in the hospital
+  edit form) for distance sorting to work — otherwise results just show
+  unsorted.
+- **Ask AI** (`/ask-ai`) — a dedicated entry point that opens the existing
+  Chatbase widget, with a medical-advice disclaimer. A fully custom AI
+  integration was intentionally not built here: calling an AI API directly
+  from browser JavaScript would expose your API key publicly. Chatbase
+  already solves this safely server-side.
+
+### Not implemented (scope/security tradeoffs)
+- Family/multi-profile accounts, granular staff permission tiers within a
+  hospital, SMS/WhatsApp reminders, and a real geocoding-from-address flow
+  (hospitals currently need lat/lng entered manually) were left out —
+  each needs either a paid third-party service or a much larger auth
+  redesign than fits here.

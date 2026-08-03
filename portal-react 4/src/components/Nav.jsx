@@ -17,8 +17,8 @@ export default function Nav({ showRoleBadge = false }) {
         </div>
         <div className="nav-actions">
           {showRoleBadge && role && (
-            <span className={`badge ${role === 'admin' ? 'badge-admin' : 'badge-user'}`}>
-              {role === 'admin' ? t.badge_admin : t.badge_patient}
+            <span className={`badge ${role === 'admin' ? 'badge-admin' : (role === 'hospital' ? 'badge-admin' : 'badge-user')}`}>
+              {role === 'admin' ? t.badge_admin : (role === 'hospital' ? 'Hospital Staff' : t.badge_patient)}
             </span>
           )}
           <button className="lang-toggle" onClick={toggleLang}>{lang === 'ar' ? 'EN' : 'AR'}</button>

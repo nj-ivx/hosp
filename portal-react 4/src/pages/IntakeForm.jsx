@@ -55,7 +55,7 @@ export default function IntakeForm() {
     setAlert(null)
     setBusy(true)
     try {
-      const record = { ...form, weight: form.weight ? Number(form.weight) : null }
+      const record = { ...form, weight: form.weight ? Number(form.weight) : null, user_id: session?.user?.id || null }
       const { error } = editId
         ? await supabase.from('patients').update(record).eq('id', editId)
         : await supabase.from('patients').insert([record])

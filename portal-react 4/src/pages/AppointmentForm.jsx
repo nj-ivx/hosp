@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useLang } from '../context/LangContext'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabaseClient'
@@ -9,6 +9,7 @@ import VitalLine from '../components/VitalLine'
 export default function AppointmentForm() {
   const { t } = useLang()
   const { session } = useAuth()
+  const [searchParams] = useSearchParams()
 
   const [hospitals, setHospitals] = useState([])
   const [doctors, setDoctors] = useState([])
@@ -16,8 +17,8 @@ export default function AppointmentForm() {
 
   const [patientName, setPatientName] = useState('')
   const [patientEmail, setPatientEmail] = useState(session?.user?.email || '')
-  const [hospitalId, setHospitalId] = useState('')
-  const [doctorId, setDoctorId] = useState('')
+  const [hospitalId, setHospitalId] = useState(searchParams.get('hospital') || '')
+  const [doctorId, setDoctorId] = useState(searchParams.get('doctor') || '')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [reason, setReason] = useState('')

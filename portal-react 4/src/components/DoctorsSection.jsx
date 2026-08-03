@@ -18,7 +18,7 @@ function parseCsv(text) {
   })
 }
 
-export default function DoctorsSection({ isAdmin, hospitals }) {
+export default function DoctorsSection({ isAdmin, hospitals, lockedHospitalId }) {
   const { t } = useLang()
   const { showToast } = useToast()
   const fileInputRef = useRef(null)
@@ -27,7 +27,7 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
   const [formOpen, setFormOpen] = useState(false)
   const [editId, setEditId] = useState('')
   const [name, setName] = useState('')
-  const [hospitalId, setHospitalId] = useState('')
+  const [hospitalId, setHospitalId] = useState(lockedHospitalId || '')
   const [department, setDepartment] = useState('')
   const [specialty, setSpecialty] = useState('')
   const [bio, setBio] = useState('')
@@ -39,7 +39,8 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
     try {
       const { data, error } = await supabase.from('doctors').select('*').order('created_at', { ascending: true })
       if (error) throw error
-      setDoctors(data || [])
+      const rows = lockedHospitalId ? (data || []).filter((d) => d.hospital_id === lockedHospitalId) : (data || [])
+      setDoctors(rows)
     } catch (err) {
       setError('Couldn\'t load doctors right now.')
     }
@@ -60,7 +61,7 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
   function openForm(doc) {
     setEditId(doc ? doc.id : '')
     setName(doc ? doc.name || '' : '')
-    setHospitalId(doc ? doc.hospital_id || '' : '')
+    setHospitalId(doc ? doc.hospital_id || '' : (lockedHospitalId || ''))
     setDepartment(doc ? doc.department || '' : '')
     setSpecialty(doc ? doc.specialty || '' : '')
     setBio(doc ? doc.bio || '' : '')
@@ -72,7 +73,7 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setSaving(true)
-    const record = { name, hospital_id: hospitalId || null, department, specialty, bio, photo_url: photoUrl }
+    const record = { name, hospital_id: lockedHospitalId || hospitalId || null, department, specialty, bio, photo_url: photoUrl }
     try {
       const { error } = editId
         ? await supabase.from('doctors').update(record).eq('id', editId)
@@ -114,7 +115,7 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
           specialty: r.specialty || '',
           bio: r.bio || '',
           photo_url: r.photo_url || '',
-          hospital_id: hospital ? hospital.id : null,
+          hospital_id: lockedHospitalId || (hospital ? hospital.id : null),
         }
       }).filter((r) => r.name)
       if (records.length === 0) {
@@ -160,13 +161,15 @@ export default function DoctorsSection({ isAdmin, hospitals }) {
               <label>{t.doctor_name}</label>
               <input required value={name} onChange={(e) => setName(e.target.value)} />
             </div>
-            <div className="field">
-              <label>{t.label_hospital}</label>
-              <select value={hospitalId} onChange={(e) => setHospitalId(e.target.value)}>
-                <option value="">{t.select_option}</option>
-                {hospitals.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
-              </select>
-            </div>
+            {!lockedHospitalId && (
+              <div className="field">
+                <label>{t.label_hospital}</label>
+                <select value={hospitalId} onChange={(e) => setHospitalId(e.target.value)}>
+                  <option value="">{t.select_option}</option>
+                  {hospitals.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
+                </select>
+              </div>
+            )}
           </div>
           <div className="grid-2">
             <div className="field">

@@ -11,6 +11,8 @@ import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import IntakeForm from './pages/IntakeForm'
 import AppointmentForm from './pages/AppointmentForm'
+import NearestSpecialist from './pages/NearestSpecialist'
+import AskAI from './pages/AskAI'
 import NotFound from './pages/NotFound'
 
 // HashRouter is used deliberately: GitHub Pages serves static files with
@@ -32,6 +34,8 @@ export default function App() {
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/intake" element={<ProtectedRoute><IntakeForm /></ProtectedRoute>} />
                 <Route path="/book" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
+                <Route path="/nearest" element={<ProtectedRoute><NearestSpecialist /></ProtectedRoute>} />
+                <Route path="/ask-ai" element={<ProtectedRoute><AskAI /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </HashRouter>
